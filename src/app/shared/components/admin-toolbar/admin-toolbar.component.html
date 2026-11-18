@@ -1,16 +1,32 @@
-<!-- BARRA FLOTANTE ESTILO CANVA (Visible solo cuando el Admin inicia sesión) -->
-<aside *ngIf="catalogService.isAdmin()" class="admin-floating-bar" aria-label="Herramientas de edición en vivo">
-  <div class="admin-bar-inner">
-    
-    <!-- Admin Badge & Status -->
+<!-- PANEL FLOTANTE EN EL LATERAL DERECHO (ESTILO CANVA) -->
+<aside 
+  *ngIf="catalogService.isAdmin()" 
+  class="admin-floating-sidebar" 
+  [class.collapsed]="isCollapsed()" 
+  aria-label="Panel de administración lateral">
+  
+  <!-- Encabezado / Botón Minimizar -->
+  <div class="sidebar-header" (click)="toggleCollapse()" [title]="isCollapsed() ? 'Expandir panel de administrador' : 'Minimizar panel'">
     <div class="admin-identity">
       <span class="admin-live-pulse"></span>
-      <div class="identity-text">
-        <span class="identity-role">MODO ADMIN YEYE</span>
-        <span class="identity-hint">Editor en vivo tipo Canva</span>
+      <div class="identity-text" *ngIf="!isCollapsed()">
+        <span class="identity-role">ADMIN YEYE</span>
+        <span class="identity-hint">Editor en vivo</span>
       </div>
     </div>
+    <button type="button" class="collapse-toggle-btn" aria-label="Minimizar o expandir">
+      <svg *ngIf="!isCollapsed()" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+      <svg *ngIf="isCollapsed()" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </button>
+  </div>
 
+  <!-- Botones de Acción (Verticales en el lateral derecho) -->
+  <div class="sidebar-tools" *ngIf="!isCollapsed()">
+    
     <!-- Switch Edición Directa -->
     <button 
       type="button" 
@@ -18,19 +34,20 @@
       class="admin-tool-btn edit-toggle-btn"
       [class.active]="catalogService.isEditMode()"
       [title]="catalogService.isEditMode() ? 'Desactivar edición en pantalla' : 'Activar edición directa en pantalla'">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M12 20h9"/>
         <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
       </svg>
-      <span>{{ catalogService.isEditMode() ? 'Edición Activa (Haz clic en textos/precios)' : 'Activar Edición en Vivo' }}</span>
+      <span>{{ catalogService.isEditMode() ? 'Edición: ON' : 'Edición: OFF' }}</span>
     </button>
 
     <!-- Botón Agregar Nuevo Servicio -->
     <button 
       type="button" 
       (click)="openNewModal()" 
-      class="admin-tool-btn add-btn">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      class="admin-tool-btn add-btn"
+      title="Agregar un nuevo servicio o diseño al catálogo">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
         <line x1="12" y1="5" x2="12" y2="19"/>
         <line x1="5" y1="12" x2="19" y2="12"/>
       </svg>
@@ -43,7 +60,7 @@
       (click)="resetCatalog()" 
       class="admin-tool-btn reset-btn"
       title="Restablecer precios y fotos por defecto">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
         <path d="M21 3v5h-5"/>
         <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
@@ -58,7 +75,7 @@
       (click)="logout()" 
       class="admin-tool-btn logout-btn"
       title="Cerrar sesión de administrador">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
         <polyline points="16 17 21 12 16 7"/>
         <line x1="21" y1="12" x2="9" y2="12"/>

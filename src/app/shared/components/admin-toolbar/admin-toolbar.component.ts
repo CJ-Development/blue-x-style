@@ -17,6 +17,11 @@ export class AdminToolbarComponent {
   notificationService = inject(NotificationService);
 
   showNewModal = signal<boolean>(false);
+  isCollapsed = signal<boolean>(false);
+
+  toggleCollapse() {
+    this.isCollapsed.update(val => !val);
+  }
 
   newServiceData: NailService = {
     id: '',
