@@ -28,11 +28,11 @@ export class QuoteService {
   }
 
   getComplexityLevels(): NailComplexity[] {
-    return COMPLEXITY_LEVELS;
+    return this.catalogService.complexityLevels();
   }
 
   getComplexityById(id: string): NailComplexity | undefined {
-    return COMPLEXITY_LEVELS.find(c => c.id === id);
+    return this.catalogService.complexityLevels().find(c => c.id === id);
   }
 
   calculateQuote(serviceId: string, complexityId: 'basic' | 'moderate' | 'complex'): QuoteCalculationResult {
@@ -106,13 +106,14 @@ export class QuoteService {
     clientName?: string,
     theme?: string
   ): string {
+    const basePriceFormatted = this.formatCurrency(this.catalogService.pressOnSettings().basePrice);
     const lines: string[] = [
       '*PEDIDO SET PRESS-ON NAILS - BLUE X STYLE*',
       '-----------------------------------------',
       `• *Forma de uña:* ${shape}`,
       `• *Largo:* ${length}`,
       `• *Talla:* ${size}`,
-      `• *Inversión base:* $40.000 COP`
+      `• *Inversión base:* ${basePriceFormatted}`
     ];
 
     if (city?.trim()) {

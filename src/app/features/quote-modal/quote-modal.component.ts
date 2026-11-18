@@ -5,6 +5,7 @@ import { QuoteService } from '../../core/services/quote.service';
 import { NailService, NailComplexity } from '../../core/models/service.model';
 import { QuoteCalculationResult } from '../../core/models/quote.model';
 import { NotificationService } from '../../core/services/notification.service';
+import { CatalogService, CotizadorContent, PressOnShape } from '../../core/services/catalog.service';
 
 export type BookingMode = 'domicilio' | 'press-on';
 
@@ -18,6 +19,7 @@ export type BookingMode = 'domicilio' | 'press-on';
 export class QuoteModalComponent implements OnInit {
   private quoteService = inject(QuoteService);
   private notificationService = inject(NotificationService);
+  catalogService = inject(CatalogService);
 
   // Modo de cotización: Cita a Domicilio o Set Press-On
   bookingMode = this.quoteService.activeBookingMode;
@@ -41,8 +43,25 @@ export class QuoteModalComponent implements OnInit {
   }
 
   // --- MODO DOMICILIO ---
-  services: NailService[] = [];
-  complexityLevels: NailComplexity[] = [];
+  get services(): NailService[] {
+    return this.catalogService.services();
+  }
+
+  get complexityLevels(): NailComplexity[] {
+    return this.catalogService.complexityLevels();
+  }
+
+  get shapes(): PressOnShape[] {
+    return this.catalogService.pressOnSettings().shapes;
+  }
+
+  get pressOnSettings() {
+    return this.catalogService.pressOnSettings();
+  }
+
+  get cotizadorContent(): CotizadorContent {
+    return this.catalogService.cotizadorContent();
+  }
 
   selectedServiceId = 'mani-semi';
   selectedComplexityId: 'basic' | 'moderate' | 'complex' = 'basic';
@@ -73,13 +92,6 @@ export class QuoteModalComponent implements OnInit {
   };
 
   // --- MODO PRESS-ON ---
-  shapes = [
-    { id: 'almond', label: 'Almendra' },
-    { id: 'coffin', label: 'Coffin / Ballerina' },
-    { id: 'stiletto', label: 'Stiletto / Punta' },
-    { id: 'square', label: 'Cuadrada Clásica' }
-  ];
-
   lengths = ['Corto', 'Medio', 'Largo', 'XL'];
 
   sizes = [
@@ -101,8 +113,6 @@ export class QuoteModalComponent implements OnInit {
   showSizeGuide = false;
 
   ngOnInit() {
-    this.services = this.quoteService.getServices();
-    this.complexityLevels = this.quoteService.getComplexityLevels();
     this.recalculate();
   }
 
@@ -150,20 +160,14 @@ export class QuoteModalComponent implements OnInit {
     if (input.files && input.files[0]) {
       const file = input.files[0];
       if (file.size > 5 * 1024 * 1024) {
-        this.notificationService.showWarning(
-          'Archivo pesado',
-          'La foto de referencia debe pesar menos de 5MB.'
-        );
+        this.notificationService.warning('La foto de referencia debe pesar menos de 5MB.');
         return;
       }
       this.referenceImageName = file.name;
       const reader = new FileReader();
       reader.onload = (e) => {
         this.referenceImageBase64 = e.target?.result as string;
-        this.notificationService.showSuccess(
-          'Foto adjunta',
-          'Referencia de diseño cargada con éxito.'
-        );
+        this.notificationService.success('Foto de referencia cargada con éxito.');
       };
       reader.readAsDataURL(file);
     }
@@ -176,6 +180,143 @@ export class QuoteModalComponent implements OnInit {
 
   formatPrice(val: number): string {
     return this.quoteService.formatCurrency(val);
+  }
+
+  // --- CANVA LIVE EDITORS: SERVICIOS Y DOMICILIO ---
+  async onServicePhotoChange(serviceId: string, event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      try {
+        const base64 = await this.catalogService.convertFileToBase64(file);
+        this.catalogService.updateService(serviceId, { imageUrl: base64 });
+        this.notificationService.success('¡Foto de servicio actualizada!');
+      } catch (e) {
+        this.notificationService.warning('Error al procesar la foto.');
+      }
+    }
+  }
+
+  updateServicePrice(serviceId: string, event: Event) {
+    const target = event.target as HTMLElement;
+    const cleanNum = parseInt(target.innerText.replace(/[^\d]/g, ''), 10);
+    if (!isNaN(cleanNum) && cleanNum > 0) {
+      this.catalogService.updateService(serviceId, { basePrice: cleanNum });
+      this.recalculate();
+      this.notificationService.info(`Precio de servicio actualizado a ${this.formatPrice(cleanNum)}`);
+    }
+  }
+
+  updateServiceName(serviceId: string, event: Event) {
+    const target = event.target as HTMLElement;
+    const val = target.innerText.trim();
+    if (val) {
+      this.catalogService.updateService(serviceId, { name: val });
+    }
+  }
+
+  updateServiceDuration(serviceId: string, event: Event) {
+    const target = event.target as HTMLElement;
+    const val = target.innerText.trim();
+    if (val) {
+      this.catalogService.updateService(serviceId, { durationEstimate: val });
+    }
+  }
+
+  // --- CANVA LIVE EDITORS: COMPLEJIDADES ---
+  async onComplexityPhotoChange(compId: string, event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      try {
+        const base64 = await this.catalogService.convertFileToBase64(file);
+        this.catalogService.updateComplexityLevel(compId, { imageUrl: base64 });
+        this.notificationService.success('¡Foto de estilo de diseño actualizada!');
+      } catch (e) {
+        this.notificationService.warning('Error al procesar la foto.');
+      }
+    }
+  }
+
+  updateComplexityExtraPrice(compId: string, event: Event) {
+    const target = event.target as HTMLElement;
+    const cleanNum = parseInt(target.innerText.replace(/[^\d]/g, ''), 10);
+    if (!isNaN(cleanNum)) {
+      this.catalogService.updateComplexityLevel(compId, { extraPrice: cleanNum });
+      this.recalculate();
+      this.notificationService.info(`Recargo de diseño actualizado a ${this.formatPrice(cleanNum)}`);
+    }
+  }
+
+  updateComplexityTitle(compId: string, event: Event) {
+    const target = event.target as HTMLElement;
+    const val = target.innerText.trim();
+    if (val) {
+      this.catalogService.updateComplexityLevel(compId, { title: val });
+    }
+  }
+
+  updateComplexitySubtitle(compId: string, event: Event) {
+    const target = event.target as HTMLElement;
+    const val = target.innerText.trim();
+    if (val) {
+      this.catalogService.updateComplexityLevel(compId, { subtitle: val });
+    }
+  }
+
+  // --- CANVA LIVE EDITORS: SETS PRESS-ON ---
+  async onShapePhotoChange(shapeId: string, event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      try {
+        const base64 = await this.catalogService.convertFileToBase64(file);
+        this.catalogService.updatePressOnShape(shapeId, { imageUrl: base64 });
+        this.notificationService.success('¡Foto de forma de uña actualizada!');
+      } catch (e) {
+        this.notificationService.warning('Error al procesar la foto.');
+      }
+    }
+  }
+
+  updateShapeLabel(shapeId: string, event: Event) {
+    const target = event.target as HTMLElement;
+    const val = target.innerText.trim();
+    if (val) {
+      this.catalogService.updatePressOnShape(shapeId, { label: val });
+    }
+  }
+
+  async onPressOnBannerChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      try {
+        const base64 = await this.catalogService.convertFileToBase64(file);
+        this.catalogService.updatePressOnSettings({ bannerImage: base64 });
+        this.notificationService.success('¡Foto de Press-On Nails actualizada!');
+      } catch (e) {
+        this.notificationService.warning('Error al procesar la foto.');
+      }
+    }
+  }
+
+  updatePressOnBasePrice(event: Event) {
+    const target = event.target as HTMLElement;
+    const cleanNum = parseInt(target.innerText.replace(/[^\d]/g, ''), 10);
+    if (!isNaN(cleanNum) && cleanNum > 0) {
+      this.catalogService.updatePressOnSettings({ basePrice: cleanNum });
+      this.notificationService.info(`Inversión base de Press-On actualizada a ${this.formatPrice(cleanNum)}`);
+    }
+  }
+
+  // --- CANVA LIVE EDITORS: TEXTOS DEL COTIZADOR ---
+  updateCotizadorField(field: keyof CotizadorContent, event: Event) {
+    const target = event.target as HTMLElement;
+    const val = target.innerText.trim();
+    if (val) {
+      this.catalogService.updateCotizadorContent({ [field]: val });
+    }
   }
 
   sendAvailabilityQuery() {
@@ -192,11 +333,7 @@ export class QuoteModalComponent implements OnInit {
       this.notes
     );
 
-    this.notificationService.showSuccess(
-      'Abriendo WhatsApp',
-      'Te redirigimos al chat con Yeye para consultar disponibilidad...'
-    );
-
+    this.notificationService.success('Abriendo WhatsApp para consultar disponibilidad...');
     window.open(url, '_blank');
   }
 
@@ -211,11 +348,7 @@ export class QuoteModalComponent implements OnInit {
       this.pressOnData.theme
     );
 
-    this.notificationService.showSuccess(
-      'Abriendo WhatsApp',
-      'Te redirigimos al chat para encargar tu set Press-On...'
-    );
-
+    this.notificationService.success('Abriendo WhatsApp para encargar tu set Press-On...');
     window.open(url, '_blank');
   }
 }

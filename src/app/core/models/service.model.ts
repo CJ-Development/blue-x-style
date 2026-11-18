@@ -18,6 +18,7 @@ export interface NailComplexity {
   extraPrice: number;
   extraTimeMinutes: number;
   description: string;
+  imageUrl?: string;
 }
 
 export const NAIL_SERVICES: NailService[] = [

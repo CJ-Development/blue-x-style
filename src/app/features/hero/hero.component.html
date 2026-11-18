@@ -41,10 +41,24 @@
 
     <!-- Right Column: Editorial Showcase Card -->
     <div class="hero-showcase-wrapper">
-      <div class="showcase-card card-flat">
+      <div class="showcase-card card-flat" [class.canva-active]="catalogService.isEditMode()">
         <div class="showcase-top">
-          <span class="caption-2 text-accent">{{ currentStyle.badge }}</span>
-          <span class="caption-1 price-highlight">{{ currentStyle.price }}</span>
+          <span 
+            class="caption-2 text-accent" 
+            [attr.contenteditable]="catalogService.isEditMode()" 
+            (blur)="updateStyleField(currentStyle.id, 'badge', $event)"
+            [class.canva-editable]="catalogService.isEditMode()"
+            [title]="catalogService.isEditMode() ? 'Clic para editar badge' : ''">
+            {{ currentStyle.badge }}
+          </span>
+          <span 
+            class="caption-1 price-highlight" 
+            [attr.contenteditable]="catalogService.isEditMode()" 
+            (blur)="updateStyleField(currentStyle.id, 'price', $event)"
+            [class.canva-editable]="catalogService.isEditMode()"
+            [title]="catalogService.isEditMode() ? 'Clic para editar precio' : ''">
+            {{ currentStyle.price }}
+          </span>
         </div>
 
         <!-- Featured Photo Frame -->
@@ -54,28 +68,78 @@
             [alt]="currentStyle.title" 
             class="showcase-img"
           />
+
+          <!-- Botón Canva para cambiar la foto directamente -->
+          <label 
+            *ngIf="catalogService.isEditMode()" 
+            class="canva-photo-edit-badge" 
+            [title]="'Cambiar foto de ' + currentStyle.title">
+            <input 
+              type="file" 
+              accept="image/*" 
+              (change)="onPhotoChange($event, currentStyle.id)" 
+              class="hidden-file-input" 
+            />
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+            <span>Cambiar Foto</span>
+          </label>
+
           <div class="photo-overlay">
-            <span class="caption-2 overlay-chip">{{ currentStyle.duration }}</span>
+            <span 
+              class="caption-2 overlay-chip" 
+              [attr.contenteditable]="catalogService.isEditMode()" 
+              (blur)="updateStyleField(currentStyle.id, 'duration', $event)"
+              [class.canva-editable]="catalogService.isEditMode()"
+              [title]="catalogService.isEditMode() ? 'Clic para editar duración' : ''">
+              {{ currentStyle.duration }}
+            </span>
           </div>
         </div>
 
         <!-- Info details -->
         <div class="showcase-body">
-          <h3 class="heading-4 text-display">{{ currentStyle.title }}</h3>
-          <p class="body-5 text-muted">{{ currentStyle.technique }}</p>
+          <h3 
+            class="heading-4 text-display" 
+            [attr.contenteditable]="catalogService.isEditMode()" 
+            (blur)="updateStyleField(currentStyle.id, 'title', $event)"
+            [class.canva-editable]="catalogService.isEditMode()"
+            [title]="catalogService.isEditMode() ? 'Clic para editar título' : ''">
+            {{ currentStyle.title }}
+          </h3>
+          <p 
+            class="body-5 text-muted" 
+            [attr.contenteditable]="catalogService.isEditMode()" 
+            (blur)="updateStyleField(currentStyle.id, 'technique', $event)"
+            [class.canva-editable]="catalogService.isEditMode()"
+            [title]="catalogService.isEditMode() ? 'Clic para editar técnica' : ''">
+            {{ currentStyle.technique }}
+          </p>
 
           <!-- Thumbnails Selector -->
           <div class="thumbs-grid">
-            <button
-              type="button"
-              *ngFor="let style of featuredStyles; let i = index"
-              (click)="selectStyle(i)"
-              [class.active]="selectedStyleIndex() === i"
-              class="thumb-item brush-interactive"
-              [title]="style.title">
-              <img [src]="style.image" [alt]="style.title" class="thumb-img" />
-              <span class="thumb-name">{{ style.title.split(' ')[0] }}</span>
-            </button>
+            <div 
+              *ngFor="let style of featuredStyles; let i = index" 
+              class="thumb-wrapper"
+              [class.active]="selectedStyleIndex() === i">
+              <button
+                type="button"
+                (click)="selectStyle(i)"
+                class="thumb-item brush-interactive"
+                [title]="style.title">
+                <img [src]="style.image" [alt]="style.title" class="thumb-img" />
+                <span class="thumb-name">{{ style.title.split(' ')[0] }}</span>
+              </button>
+              <label *ngIf="catalogService.isEditMode()" class="thumb-quick-cam" [title]="'Cambiar foto de ' + style.title">
+                <input type="file" accept="image/*" (change)="onPhotoChange($event, style.id)" class="hidden-file-input">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                  <circle cx="12" cy="13" r="4"/>
+                </svg>
+              </label>
+            </div>
           </div>
 
           <a [routerLink]="['/']" fragment="cotizador" class="btn-primary w-full">
