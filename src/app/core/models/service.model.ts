@@ -6,6 +6,7 @@ export interface NailService {
   durationEstimate: string;
   description: string;
   features: string[];
+  imageUrl?: string;
   popular?: boolean;
   badge?: string;
 }

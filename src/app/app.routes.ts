@@ -38,6 +38,15 @@ export const routes: Routes = [
     redirectTo: 'cotizar'
   },
   {
+    path: 'admin',
+    loadComponent: () => import('./pages/admin-login/admin-login-page.component').then(m => m.AdminLoginPageComponent),
+    title: 'Portal de Administración | Blue X Style'
+  },
+  {
+    path: 'login',
+    redirectTo: 'admin'
+  },
+  {
     path: '**',
     redirectTo: ''
   }

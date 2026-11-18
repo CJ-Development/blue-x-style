@@ -10,7 +10,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ThemeService } from '../../../core/services/theme.service';
 
-export type NavSection = 'inicio' | 'lookbook' | 'servicios' | 'press-on' | 'cotizador';
+export type NavSection = 'inicio' | 'catalogo' | 'lookbook' | 'servicios' | 'press-on' | 'cotizador';
 
 @Component({
   selector: 'app-navbar',
@@ -26,14 +26,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   activeSection = signal<NavSection>('inicio');
   private observer: IntersectionObserver | null = null;
 
-  navItems: { id: NavSection; label: string; icon: string }[] = [
-    { id: 'inicio', label: 'Inicio', icon: 'home' },
-    { id: 'lookbook', label: 'Lookbook', icon: 'gallery' },
-    { id: 'servicios', label: 'Tarifas', icon: 'tag' },
-    { id: 'press-on', label: 'Press-On', icon: 'sparkles' },
-    { id: 'cotizador', label: 'Cotizar', icon: 'chat' }
-  ];
-
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       this.initScrollSpy();
@@ -45,17 +37,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   private initScrollSpy() {
-    const sectionIds: NavSection[] = ['inicio', 'lookbook', 'servicios', 'press-on', 'cotizador'];
+    const sectionIds: string[] = ['inicio', 'catalogo', 'lookbook', 'servicios', 'press-on', 'cotizador'];
     
     // Intersection observer con threshold balanceado para vista móvil
     this.observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            const id = entry.target.id as NavSection;
-            if (sectionIds.includes(id)) {
-              this.activeSection.set(id);
-            }
+            const rawId = entry.target.id;
+            const mappedId = (rawId === 'servicios' || rawId === 'lookbook') ? 'catalogo' : rawId;
+            this.activeSection.set(mappedId as NavSection);
           }
         }
       },
@@ -76,8 +67,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }, 400);
   }
 
-  scrollToSection(id: NavSection) {
-    this.activeSection.set(id);
+  scrollToSection(id: string) {
+    const mappedId = (id === 'servicios' || id === 'lookbook') ? 'catalogo' : id;
+    this.activeSection.set(mappedId as NavSection);
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });

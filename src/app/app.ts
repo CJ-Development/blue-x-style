@@ -7,6 +7,7 @@ import { FooterComponent } from './shared/components/footer/footer.component';
 import { BrushCursorComponent } from './shared/components/brush-cursor/brush-cursor.component';
 import { ToastContainerComponent } from './shared/components/toast/toast-container.component';
 import { FloatingWhatsappComponent } from './shared/components/floating-whatsapp/floating-whatsapp.component';
+import { AdminToolbarComponent } from './shared/components/admin-toolbar/admin-toolbar.component';
 import { filter } from 'rxjs';
 
 @Component({
@@ -19,7 +20,8 @@ import { filter } from 'rxjs';
     FooterComponent,
     BrushCursorComponent,
     ToastContainerComponent,
-    FloatingWhatsappComponent
+    FloatingWhatsappComponent,
+    AdminToolbarComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'

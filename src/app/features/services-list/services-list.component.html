@@ -1,13 +1,19 @@
-<section id="servicios" class="services-section">
+<section id="catalogo" class="services-section">
+  <!-- Anclas compatibles para enlaces previos -->
+  <span id="servicios" class="sr-anchor"></span>
+  <span id="lookbook" class="sr-anchor"></span>
+
   <div class="container">
+    
+    <!-- Section Header -->
     <div class="section-header text-center reveal-on-scroll">
       <div class="proof-chip">
         <span class="live-dot"></span>
-        <span class="caption-2">Tarifas transparentes sin costos ocultos</span>
+        <span class="caption-2">Catálogo & Diseños Reales</span>
       </div>
-      <h2 class="heading-2">Catálogo de servicios a domicilio</h2>
+      <h2 class="heading-2">Catálogo & Lookbook de Servicios</h2>
       <p class="body-1 section-subtitle">
-        Insumos profesionales de máxima pureza. Cada cita incluye diagnóstico personalizado y preparación rusa milimétrica.
+        Diseños de autor hechos a mano e insumos de máxima pureza. Explora fotos de trabajos reales y cotiza tu servicio a domicilio en minutos.
       </p>
 
       <!-- Category Filter Tabs -->
@@ -15,41 +21,143 @@
         <button 
           *ngFor="let cat of categories" 
           (click)="setCategory(cat.id)"
-          [class.active]="selectedCategory === cat.id"
+          [class.active]="catalogService.selectedCategory() === cat.id"
           class="tab-btn caption-2 brush-interactive">
           {{ cat.label }}
         </button>
       </div>
     </div>
 
-    <!-- Services Grid -->
+    <!-- Banner informativo si el modo Canva está activo -->
+    <div *ngIf="catalogService.isEditMode()" class="canva-edit-banner card-flat mb-4">
+      <div class="banner-left">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="2">
+          <path d="M12 20h9"/>
+          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+        </svg>
+        <div>
+          <strong class="title-3 text-accent">Modo Edición en Vivo Activo (Estilo Canva)</strong>
+          <p class="body-5 text-muted">Haz clic sobre cualquier precio, título o descripción para editarlo. También puedes cambiar la foto con el botón de cámara de cada tarjeta.</p>
+        </div>
+      </div>
+      <button type="button" (click)="catalogService.toggleEditMode()" class="btn-secondary caption-2">
+        Finalizar Edición
+      </button>
+    </div>
+
+    <!-- Unified Services & Lookbook Grid -->
     <div class="services-grid reveal-on-scroll reveal-stagger">
+      
       <div 
         *ngFor="let s of filteredServices" 
         class="service-card card-flat brush-interactive"
-        [class.popular-card]="s.popular">
+        [class.popular-card]="s.popular"
+        [class.editing-active]="catalogService.isEditMode()">
 
-        <!-- Badge -->
+        <!-- Badge Promocional / Estilo -->
         <div *ngIf="s.badge" class="service-badge caption-2">
           {{ s.badge }}
         </div>
 
-        <div class="service-card-top">
-          <div class="duration-pill caption-2">
+        <!-- Tarjeta de Foto Real (Lookbook integrado) -->
+        <div class="card-media-frame">
+          <img 
+            [src]="s.imageUrl || 'images/portfolio/work_1.jpg'" 
+            [alt]="s.name" 
+            class="service-thumb-img"
+          />
+
+          <!-- Overlay con acciones -->
+          <div class="media-overlay">
+            <button 
+              type="button" 
+              (click)="openLightbox(s)" 
+              class="overlay-zoom-btn"
+              title="Ampliar foto del diseño">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                <line x1="11" y1="8" x2="11" y2="14"/>
+                <line x1="8" y1="11" x2="14" y2="11"/>
+              </svg>
+              <span>Ver Foto Real</span>
+            </button>
+          </div>
+
+          <!-- BOTÓN CANVA PARA CAMBIAR FOTO (Visible solo en modo edición) -->
+          <div *ngIf="catalogService.isEditMode()" class="canva-image-edit-badge">
+            <input 
+              type="file" 
+              accept="image/*" 
+              (change)="onImageFileChange(s, $event)" 
+              [id]="'photo-change-' + s.id" 
+              class="hidden-img-input" 
+            />
+            <label [for]="'photo-change-' + s.id" class="canva-cam-btn" title="Subir nueva foto para este servicio">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
+              </svg>
+              <span>Cambiar Foto</span>
+            </label>
+          </div>
+
+          <!-- BOTÓN CANVA PARA ELIMINAR SERVICIO -->
+          <button 
+            *ngIf="catalogService.isEditMode()" 
+            type="button" 
+            (click)="deleteService(s, $event)" 
+            class="canva-delete-btn"
+            title="Eliminar este servicio del catálogo">
+            ✕
+          </button>
+        </div>
+
+        <!-- Info Header -->
+        <div class="service-card-top mt-3">
+          <div class="duration-pill caption-2" [class.editable-field]="catalogService.isEditMode()">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
             </svg>
-            <span>{{ s.durationEstimate }}</span>
+            <input 
+              *ngIf="catalogService.isEditMode()" 
+              type="text" 
+              [ngModel]="s.durationEstimate" 
+              (ngModelChange)="onDurationChange(s, $event)"
+              class="inline-edit-input duration-input"
+            />
+            <span *ngIf="!catalogService.isEditMode()">{{ s.durationEstimate }}</span>
           </div>
 
           <span class="service-category-name caption-2">{{ s.category }}</span>
         </div>
 
-        <h3 class="heading-4 service-name">{{ s.name }}</h3>
-        <p class="body-5 service-desc">{{ s.description }}</p>
+        <!-- Título Editable -->
+        <div class="title-container mt-2">
+          <input 
+            *ngIf="catalogService.isEditMode()" 
+            type="text" 
+            [ngModel]="s.name" 
+            (ngModelChange)="onTitleChange(s, $event)"
+            class="inline-edit-input title-input heading-4"
+          />
+          <h3 *ngIf="!catalogService.isEditMode()" class="heading-4 service-name">{{ s.name }}</h3>
+        </div>
 
-        <!-- Features (outcome driven bullets) -->
-        <ul class="features-list">
+        <!-- Descripción Editable -->
+        <div class="desc-container mt-1">
+          <textarea 
+            *ngIf="catalogService.isEditMode()" 
+            [ngModel]="s.description" 
+            (ngModelChange)="onDescriptionChange(s, $event)"
+            rows="2"
+            class="inline-edit-input desc-input body-5">
+          </textarea>
+          <p *ngIf="!catalogService.isEditMode()" class="body-5 service-desc">{{ s.description }}</p>
+        </div>
+
+        <!-- Bullets / Características -->
+        <ul class="features-list mt-3">
           <li *ngFor="let feat of s.features">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="check-icon">
               <polyline points="20 6 9 17 4 12"/>
@@ -59,20 +167,90 @@
         </ul>
 
         <!-- Pricing & Action -->
-        <div class="service-card-footer">
-          <div class="price-box">
-            <span class="caption-2 price-label">Desde</span>
-            <span class="heading-4 price-val">{{ formatPrice(s.basePrice) }}</span>
+        <div class="service-card-footer mt-4">
+          
+          <!-- CAJA DE PRECIO CON EDICIÓN CANVA EN VIVO -->
+          <div 
+            class="price-box" 
+            [class.canva-price-clickable]="catalogService.isEditMode()"
+            (click)="startEditingPrice(s, $event)"
+            [title]="catalogService.isEditMode() ? 'Haz clic para cambiar el precio' : ''">
+            
+            <span class="caption-2 price-label">
+              {{ catalogService.isEditMode() ? 'Precio (Clic para editar):' : 'Desde' }}
+            </span>
+
+            <!-- Modo normal -->
+            <div *ngIf="editingPriceId() !== s.id" class="heading-4 price-val">
+              {{ formatPrice(s.basePrice) }}
+              <span *ngIf="catalogService.isEditMode()" class="price-edit-pencil">✎</span>
+            </div>
+
+            <!-- Input de edición rápida de precio -->
+            <div *ngIf="editingPriceId() === s.id" class="inline-price-editor" (click)="$event.stopPropagation()">
+              <input 
+                type="number" 
+                [(ngModel)]="tempPriceInput" 
+                (keydown.enter)="savePrice(s)"
+                (keydown.escape)="cancelPriceEdit()"
+                class="form-control price-number-input" 
+                autoFocus
+              />
+              <button type="button" (click)="savePrice(s)" class="save-price-btn" title="Guardar">✓</button>
+              <button type="button" (click)="cancelPriceEdit()" class="cancel-price-btn" title="Cancelar">✕</button>
+            </div>
           </div>
 
+          <!-- Botón de Cotizar Cita -->
           <button (click)="onSelectService(s.id)" class="btn-primary select-btn">
-            <span>Cotizar</span>
+            <span>Cotizar Cita</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
           </button>
         </div>
+
       </div>
+
     </div>
+
   </div>
 </section>
+
+<!-- LIGHTBOX MODAL PARA AMPLIAR FOTO REAL -->
+<div *ngIf="activeLightboxItem()" class="lightbox-backdrop" (click)="closeLightbox()">
+  <div class="lightbox-modal card-flat" (click)="$event.stopPropagation()">
+    
+    <button type="button" (click)="closeLightbox()" class="close-lightbox-btn">✕</button>
+
+    <div class="lightbox-image-wrap">
+      <img [src]="activeLightboxItem()?.imageUrl" [alt]="activeLightboxItem()?.name" class="lightbox-img" />
+    </div>
+
+    <div class="lightbox-info mt-3">
+      <div class="d-flex justify-between align-center">
+        <div>
+          <span class="caption-2 text-accent">{{ activeLightboxItem()?.category | titlecase }}</span>
+          <h3 class="heading-3 mt-1">{{ activeLightboxItem()?.name }}</h3>
+        </div>
+        <div class="heading-3 price-highlight">
+          {{ formatPrice(activeLightboxItem()!.basePrice) }}
+        </div>
+      </div>
+      <p class="body-5 text-muted mt-2">{{ activeLightboxItem()?.description }}</p>
+
+      <div class="lightbox-actions mt-3">
+        <button 
+          type="button" 
+          (click)="onSelectService(activeLightboxItem()!.id); closeLightbox()" 
+          class="btn-primary w-full">
+          <span>Cotizar este diseño en el Cotizador Express</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

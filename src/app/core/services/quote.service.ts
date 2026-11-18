@@ -1,11 +1,14 @@
-﻿import { Injectable, signal } from '@angular/core';
+﻿import { Injectable, inject, signal } from '@angular/core';
 import { COMPLEXITY_LEVELS, NAIL_SERVICES, NailComplexity, NailService } from '../models/service.model';
 import { QuoteCalculationResult } from '../models/quote.model';
+import { CatalogService } from './catalog.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class QuoteService {
+  private catalogService = inject(CatalogService);
+
   // WhatsApp oficial de Yeye
   readonly contactPhone = '573125278094';
 
@@ -17,11 +20,11 @@ export class QuoteService {
   }
 
   getServices(): NailService[] {
-    return NAIL_SERVICES;
+    return this.catalogService.services();
   }
 
   getServiceById(id: string): NailService | undefined {
-    return NAIL_SERVICES.find(s => s.id === id);
+    return this.catalogService.getServiceById(id);
   }
 
   getComplexityLevels(): NailComplexity[] {
