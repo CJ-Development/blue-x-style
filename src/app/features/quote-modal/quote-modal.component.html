@@ -1,0 +1,312 @@
+﻿<section id="cotizador" class="quote-section">
+  <div class="container">
+    <div class="quote-card card-flat">
+      
+      <!-- Section Header -->
+      <div class="quote-header text-center">
+        <div class="proof-chip">
+          <span class="live-dot"></span>
+          <span class="caption-2">Cotizador Express sin Formularios Largos</span>
+        </div>
+        <h2 class="heading-2 quote-title">Cotiza y Consulta Disponibilidad</h2>
+        <p class="body-1 quote-subtitle">
+          Elige lo que necesitas en 3 toques. Al finalizar, consultarás fechas y horarios directamente por WhatsApp.
+        </p>
+
+        <!-- Mode Switcher Tabs -->
+        <div class="mode-switcher-container">
+          <button 
+            type="button" 
+            class="mode-switch-btn" 
+            [class.active]="bookingMode() === 'domicilio'"
+            (click)="setMode('domicilio')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <span>Cita a Domicilio (Bogotá)</span>
+          </button>
+
+          <button 
+            type="button" 
+            class="mode-switch-btn" 
+            [class.active]="bookingMode() === 'press-on'"
+            (click)="setMode('press-on')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+              <line x1="3" y1="9" x2="21" y2="9"/>
+              <line x1="9" y1="21" x2="9" y2="9"/>
+            </svg>
+            <span>Set Press-On (Envíos Colombia)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- CASO 1: CITA A DOMICILIO EN BOGOTÁ -->
+      <!-- ========================================== -->
+      <div *ngIf="bookingMode() === 'domicilio'" class="wizard-grid">
+        
+        <!-- Columna Izquierda: Selección Táctil Rápida -->
+        <div class="wizard-selection-col">
+          
+          <!-- 1. Servicio -->
+          <div class="step-group">
+            <label class="step-label caption-2">1. Selecciona tu servicio base:</label>
+            <div class="service-chips-grid">
+              <button 
+                type="button"
+                *ngFor="let s of services"
+                (click)="selectService(s.id)"
+                [class.active]="selectedServiceId === s.id"
+                class="service-chip-card">
+                <div class="chip-top">
+                  <span class="chip-name body-4">{{ s.name }}</span>
+                  <span class="chip-price caption-1">{{ formatPrice(s.basePrice) }}</span>
+                </div>
+                <span class="chip-duration caption-2 text-subtle">{{ s.durationEstimate }}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. Diseño / Nail Art -->
+          <div class="step-group">
+            <label class="step-label caption-2">2. Estilo de diseño deseado:</label>
+            <div class="complexity-chips-grid">
+              <button 
+                type="button"
+                *ngFor="let c of complexityLevels"
+                (click)="selectComplexity(c.id)"
+                [class.active]="selectedComplexityId === c.id"
+                class="complexity-chip-card">
+                <div class="comp-chip-top">
+                  <strong class="title-3">{{ c.title }}</strong>
+                  <span class="comp-chip-badge caption-2" [class.free]="c.extraPrice === 0">
+                    {{ c.extraPrice === 0 ? 'Sin recargo' : '+ ' + formatPrice(c.extraPrice) }}
+                  </span>
+                </div>
+                <p class="body-5 text-muted comp-chip-desc">{{ c.subtitle }}</p>
+              </button>
+            </div>
+          </div>
+
+          <!-- 3. Zona en Bogotá -->
+          <div class="step-group">
+            <label class="step-label caption-2">3. ¿En qué sector o barrio de Bogotá te encuentras?:</label>
+            <div class="neighborhood-chips-row">
+              <button 
+                type="button"
+                *ngFor="let nh of popularNeighborhoods"
+                (click)="selectNeighborhood(nh)"
+                [class.active]="selectedNeighborhood === nh"
+                class="nh-chip caption-2">
+                {{ nh }}
+              </button>
+            </div>
+
+            <!-- Input extra si elige "Otro barrio" -->
+            <div *ngIf="selectedNeighborhood === 'Otro barrio'" class="mt-2">
+              <input 
+                type="text" 
+                [(ngModel)]="customNeighborhood" 
+                placeholder="Escribe tu barrio o localidad (ej. Modelia, Hayuelos, Cedro Golf)" 
+                class="form-control body-5" 
+              />
+            </div>
+          </div>
+
+          <!-- 4. Nombre opcional -->
+          <div class="step-group">
+            <label class="step-label caption-2">4. Tu nombre (opcional):</label>
+            <input type="text" [(ngModel)]="clientName" placeholder="¿Cómo te llamas? (ej. Camila)" class="form-control body-5" />
+          </div>
+
+        </div>
+
+        <!-- Columna Derecha: Tarjeta de Resumen y Botón WhatsApp -->
+        <div class="wizard-summary-col">
+          <div class="summary-floating-card card-flat">
+            <span class="caption-2 text-accent">Resumen de tu selección</span>
+            <h3 class="heading-4 summary-service-title">{{ currentServiceName }}</h3>
+            
+            <div class="summary-specs">
+              <div class="spec-row">
+                <span class="body-5 text-muted">Diseño:</span>
+                <span class="body-5 text-main font-semibold">{{ currentComplexityTitle }}</span>
+              </div>
+              <div class="spec-row">
+                <span class="body-5 text-muted">Zona:</span>
+                <span class="body-5 text-main font-semibold">
+                  {{ selectedNeighborhood === 'Otro barrio' && customNeighborhood ? customNeighborhood : selectedNeighborhood }}
+                </span>
+              </div>
+              <div class="spec-row">
+                <span class="body-5 text-muted">Duración:</span>
+                <span class="body-5 text-accent font-semibold">{{ quoteResult.durationText }}</span>
+              </div>
+            </div>
+
+            <div class="summary-price-box">
+              <span class="caption-2 text-subtle">Cotización total estimada</span>
+              <div class="heading-2 total-price-display">{{ formatPrice(quoteResult.totalEstimated) }}</div>
+              <p class="caption-2 text-subtle abono-note">
+                * Para asegurar el cupo en tu puerta se solicita un abono del 20% (${{ formatPrice(quoteResult.depositAmount) }}).
+              </p>
+            </div>
+
+            <button 
+              type="button" 
+              (click)="sendAvailabilityQuery()" 
+              class="btn-primary w-full whatsapp-submit-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/>
+              </svg>
+              <span>Preguntar disponibilidad en WhatsApp</span>
+            </button>
+            <p class="caption-2 text-center text-subtle mt-2">
+              Se abrirá tu WhatsApp con el servicio seleccionado para consultar horarios con Yeye.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ========================================== -->
+      <!-- CASO 2: SETS PRESS-ON (ENVÍOS COLOMBIA) -->
+      <!-- ========================================== -->
+      <div *ngIf="bookingMode() === 'press-on'" class="wizard-grid">
+        
+        <div class="wizard-selection-col">
+          
+          <!-- 1. Forma de uña -->
+          <div class="step-group">
+            <label class="step-label caption-2">1. Elige la forma de uña:</label>
+            <div class="shapes-chips-grid">
+              <button 
+                type="button"
+                *ngFor="let sh of shapes"
+                (click)="pressOnData.shape = sh.id"
+                [class.active]="pressOnData.shape === sh.id"
+                class="shape-chip-btn">
+                <span class="body-4 font-semibold">{{ sh.label }}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. Largo deseado -->
+          <div class="step-group">
+            <label class="step-label caption-2">2. Largo de uña:</label>
+            <div class="lengths-chips-grid">
+              <button 
+                type="button"
+                *ngFor="let len of lengths"
+                (click)="pressOnData.length = len"
+                [class.active]="pressOnData.length === len"
+                class="len-chip-btn caption-1">
+                {{ len }}
+              </button>
+            </div>
+          </div>
+
+          <!-- 3. Talla de uña -->
+          <div class="step-group">
+            <div class="d-flex justify-between align-center mb-1">
+              <label class="step-label caption-2">3. Talla de tus uñas:</label>
+              <button type="button" (click)="toggleSizeGuide()" class="guide-toggle-btn caption-2">
+                {{ showSizeGuide ? 'Ocultar guía' : '¿Cómo medir mi uña?' }}
+              </button>
+            </div>
+
+            <div class="sizes-chips-grid">
+              <button 
+                type="button"
+                *ngFor="let sz of sizes"
+                (click)="pressOnData.size = sz.id"
+                [class.active]="pressOnData.size === sz.id"
+                class="size-chip-btn">
+                <strong class="caption-1">{{ sz.id }}</strong>
+                <span class="body-5 text-muted">{{ sz.label.split('(')[1]?.replace(')', '') || sz.label }}</span>
+              </button>
+            </div>
+
+            <!-- Guía de medidas desplegable -->
+            <div *ngIf="showSizeGuide" class="size-guide-card card-flat mt-2">
+              <p class="body-5 text-muted">
+                Coloca cinta adhesiva sobre la parte más ancha de tu uña, marca los extremos con lapicero y mide con regla en milímetros.
+              </p>
+              <div class="sizes-mini-list mt-1">
+                <div *ngFor="let sz of sizes" class="size-mini-item">
+                  <span class="caption-2 text-accent font-semibold">{{ sz.id }}:</span>
+                  <span class="caption-2 text-main">{{ sz.dims }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Ciudad y Temática -->
+          <div class="step-group form-row-2">
+            <div>
+              <label class="caption-2 text-subtle">Ciudad de envío:</label>
+              <input type="text" [(ngModel)]="pressOnData.city" placeholder="Ej. Bogotá, Medellín, Cali" class="form-control body-5" />
+            </div>
+            <div>
+              <label class="caption-2 text-subtle">Estilo o temática (opcional):</label>
+              <input type="text" [(ngModel)]="pressOnData.theme" placeholder="Ej. BTS Y2K, Cromo, Nude chic" class="form-control body-5" />
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Columna Resumen Press-On -->
+        <div class="wizard-summary-col">
+          <div class="summary-floating-card card-flat">
+            <span class="caption-2 text-accent">Resumen de tu Set Press-On</span>
+            <h3 class="heading-4 summary-service-title">Set 100% Reutilizable en Gel</h3>
+
+            <div class="summary-specs">
+              <div class="spec-row">
+                <span class="body-5 text-muted">Forma:</span>
+                <span class="body-5 text-main font-semibold">{{ pressOnData.shape | titlecase }}</span>
+              </div>
+              <div class="spec-row">
+                <span class="body-5 text-muted">Largo:</span>
+                <span class="body-5 text-main font-semibold">{{ pressOnData.length }}</span>
+              </div>
+              <div class="spec-row">
+                <span class="body-5 text-muted">Talla:</span>
+                <span class="body-5 text-accent font-semibold">{{ pressOnData.size }}</span>
+              </div>
+              <div class="spec-row">
+                <span class="body-5 text-muted">Destino:</span>
+                <span class="body-5 text-main font-semibold">{{ pressOnData.city }}</span>
+              </div>
+            </div>
+
+            <div class="summary-price-box">
+              <span class="caption-2 text-subtle">Inversión base</span>
+              <div class="heading-2 total-price-display">Desde $40.000 COP</div>
+              <p class="caption-2 text-subtle abono-note">
+                * Incluye kit completo de aplicación express (adhesivos, lima y palito de naranjo).
+              </p>
+            </div>
+
+            <button 
+              type="button" 
+              (click)="sendPressOnOrder()" 
+              class="btn-primary w-full whatsapp-submit-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/>
+              </svg>
+              <span>Pedir mi Set por WhatsApp</span>
+            </button>
+            <p class="caption-2 text-center text-subtle mt-2">
+              Enviarás la forma, talla y largo a Yeye para definir los detalles de tu set.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>

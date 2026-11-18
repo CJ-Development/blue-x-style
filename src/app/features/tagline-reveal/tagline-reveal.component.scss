@@ -1,0 +1,80 @@
+﻿.tagline-section {
+  padding: 64px 0 72px;
+  border-top: 1px solid var(--border-all);
+  border-bottom: 1px solid var(--border-all);
+  background-color: var(--bg-surface);
+
+  @media (max-width: 768px) {
+    padding: 40px 0 48px;
+  }
+}
+
+.tagline-container {
+  width: 100%;
+  width: 100%; max-width: min(100%, 820px);
+  margin: 0 auto;
+  text-align: center; box-sizing: border-box;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.tagline-label {
+  color: var(--accent-blue);
+  margin-bottom: 20px;
+}
+
+.tagline-text-block {
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+  margin-bottom: 24px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+
+  @media (max-width: 640px) {
+    font-size: clamp(1.35rem, 5vw, 1.85rem);
+    line-height: 1.25;
+  }
+}
+
+.reveal-word {
+  display: inline-block;
+  color: var(--text-main);
+  opacity: 0.22;
+  transition: opacity 400ms var(--ease-base), transform 400ms var(--ease-base);
+  transform: translateY(2px);
+
+  &.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tagline-footer {
+  display: flex;
+  justify-content: center;
+
+  .pill-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background-color: var(--bg-deep);
+    border: 1px solid var(--border-all);
+    border-radius: 9999px;
+    color: var(--text-subtle);
+    max-width: 100%;
+    box-sizing: border-box;
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--accent-blue);
+      flex-shrink: 0;
+    }
+
+    span {
+      font-size: 0.8rem;
+    }
+  }
+}

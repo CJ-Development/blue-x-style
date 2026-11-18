@@ -1,0 +1,78 @@
+<section id="servicios" class="services-section">
+  <div class="container">
+    <div class="section-header text-center reveal-on-scroll">
+      <div class="proof-chip">
+        <span class="live-dot"></span>
+        <span class="caption-2">Tarifas transparentes sin costos ocultos</span>
+      </div>
+      <h2 class="heading-2">Catálogo de servicios a domicilio</h2>
+      <p class="body-1 section-subtitle">
+        Insumos profesionales de máxima pureza. Cada cita incluye diagnóstico personalizado y preparación rusa milimétrica.
+      </p>
+
+      <!-- Category Filter Tabs -->
+      <div class="category-tabs">
+        <button 
+          *ngFor="let cat of categories" 
+          (click)="setCategory(cat.id)"
+          [class.active]="selectedCategory === cat.id"
+          class="tab-btn caption-2 brush-interactive">
+          {{ cat.label }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Services Grid -->
+    <div class="services-grid reveal-on-scroll reveal-stagger">
+      <div 
+        *ngFor="let s of filteredServices" 
+        class="service-card card-flat brush-interactive"
+        [class.popular-card]="s.popular">
+
+        <!-- Badge -->
+        <div *ngIf="s.badge" class="service-badge caption-2">
+          {{ s.badge }}
+        </div>
+
+        <div class="service-card-top">
+          <div class="duration-pill caption-2">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+            </svg>
+            <span>{{ s.durationEstimate }}</span>
+          </div>
+
+          <span class="service-category-name caption-2">{{ s.category }}</span>
+        </div>
+
+        <h3 class="heading-4 service-name">{{ s.name }}</h3>
+        <p class="body-5 service-desc">{{ s.description }}</p>
+
+        <!-- Features (outcome driven bullets) -->
+        <ul class="features-list">
+          <li *ngFor="let feat of s.features">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="check-icon">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span class="body-5">{{ feat }}</span>
+          </li>
+        </ul>
+
+        <!-- Pricing & Action -->
+        <div class="service-card-footer">
+          <div class="price-box">
+            <span class="caption-2 price-label">Desde</span>
+            <span class="heading-4 price-val">{{ formatPrice(s.basePrice) }}</span>
+          </div>
+
+          <button (click)="onSelectService(s.id)" class="btn-primary select-btn">
+            <span>Cotizar</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

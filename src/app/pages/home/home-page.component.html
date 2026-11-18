@@ -1,0 +1,17 @@
+<!-- 1. Hero & Featured Studio Showcase -->
+<app-hero></app-hero>
+
+<!-- 2. Tagline Reveal Section (Mandatory Rule B11) -->
+<app-tagline-reveal></app-tagline-reveal>
+
+<!-- 3. Real Work Portfolio / Lookbook (Proof) -->
+<app-lookbook></app-lookbook>
+
+<!-- 4. Catálogo & Precios (Servicios & Tarifas a Domicilio) -->
+<app-services-list (selectServiceForQuote)="onServiceSelected($event)"></app-services-list>
+
+<!-- 5. Press-On Nails: Uñas Reutilizables a Medida (Envíos Nacionales) -->
+<app-press-on></app-press-on>
+
+<!-- 6. Cotizador Interactivo a Domicilio (Destino de Scroll Fluido) -->
+<app-quote-modal [preselectedServiceId]="selectedServiceId()"></app-quote-modal>

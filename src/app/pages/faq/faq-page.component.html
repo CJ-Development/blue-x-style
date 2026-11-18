@@ -1,0 +1,55 @@
+<div class="faq-page-container">
+  <div class="container">
+    <!-- Back to Home navigation -->
+    <div class="back-nav-bar">
+      <a routerLink="/" class="back-link body-4">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        <span>Volver a la página principal</span>
+      </a>
+    </div>
+
+    <!-- Page Header -->
+    <div class="faq-page-header text-center reveal-on-scroll">
+      <div class="proof-chip">
+        <span class="live-dot"></span>
+        <span class="caption-2">Centro de ayuda y transparencia</span>
+      </div>
+      <h1 class="heading-1 page-title">Preguntas Frecuentes</h1>
+      <p class="body-1 page-subtitle">
+        Resolvemos todas tus dudas sobre desplazamientos en Bogotá, tiempos, instrumental esterilizado y confirmación de agenda.
+      </p>
+    </div>
+
+    <!-- FAQ Accordion Component -->
+    <div class="faq-embed-wrapper reveal-on-scroll">
+      <app-faq></app-faq>
+    </div>
+
+    <!-- WhatsApp Support Banner Card -->
+    <div class="faq-contact-card card-flat text-center reveal-on-scroll reveal-scale">
+      <div class="contact-icon-frame">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+        </svg>
+      </div>
+      <h3 class="heading-3">¿Tienes alguna duda o diseño específico?</h3>
+      <p class="body-1 contact-desc">
+        Si tienes un requerimiento especial, evento o dudas sobre tu dirección en Bogotá, contáctanos directamente por WhatsApp y te asesoramos al instante.
+      </p>
+      <div class="contact-btn-wrap">
+        <a 
+          href="https://api.whatsapp.com/send?phone=573125278094&text=Hola%20Yeye%2C%20tengo%20una%20pregunta%20sobre%20el%20servicio%20a%20domicilio%20de%20Blue%20X%20Style." 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="btn-primary whatsapp-contact-btn">
+          <span>Hablar con Yeye en WhatsApp</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

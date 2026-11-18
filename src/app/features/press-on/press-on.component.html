@@ -1,0 +1,157 @@
+<section id="press-on" class="press-on-section">
+  <div class="container">
+    <div class="press-on-grid">
+      <!-- Info & Visual Showcase -->
+      <div class="press-on-info reveal-on-scroll reveal-left">
+        <div class="proof-chip">
+          <span class="live-dot"></span>
+          <span class="caption-2">Envíos a todo Colombia</span>
+        </div>
+        <h2 class="heading-2">Press-On Nails: Uñas reutilizables a medida</h2>
+        
+        <p class="body-1 section-desc">
+          Sets de uñas reutilizables hechas a mano a la medida exacta de tus dedos.
+          Ideales para eventos, conciertos (como nuestra colección BTS), sesiones fotográficas o para quienes no pueden llevar uñas largas en su trabajo diario.
+        </p>
+
+        <div class="benefits-list reveal-stagger">
+          <div class="benefit-item card-flat brush-interactive">
+            <span class="benefit-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </span>
+            <div>
+              <strong class="title-3">Aplicación en 10 minutos</strong>
+              <p class="body-5">Aplícatelas tú misma con pegamento o pestañas adhesivas de silicona.</p>
+            </div>
+          </div>
+
+          <div class="benefit-item card-flat brush-interactive">
+            <span class="benefit-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                <path d="M3 3v5h5"/>
+                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+                <path d="M16 21h5v-5"/>
+              </svg>
+            </span>
+            <div>
+              <strong class="title-3">100% Reutilizables en gel</strong>
+              <p class="body-5">Estructura sólida en gel de construcción que no se parte ni pierde el brillo.</p>
+            </div>
+          </div>
+
+          <div class="benefit-item card-flat brush-interactive">
+            <span class="benefit-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
+                <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
+                <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
+                <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
+                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.563-2.512 5.563-5.563C21.437 6.137 17.18 2 12 2Z"/>
+              </svg>
+            </span>
+            <div>
+              <strong class="title-3">Kit completo incluido</strong>
+              <p class="body-5">Incluye lima, palito de naranjo, toallitas preparadoras y adhesivo.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="price-banner card-flat">
+          <div>
+            <span class="caption-2 text-subtle">Inversión base</span>
+            <div class="heading-3 price-main">Desde $40.000 COP</div>
+          </div>
+          <button type="button" (click)="toggleSizeGuide()" class="btn-secondary guide-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="7" width="20" height="10" rx="2" ry="2"/>
+              <line x1="6" y1="7" x2="6" y2="12"/>
+              <line x1="10" y1="7" x2="10" y2="10"/>
+              <line x1="14" y1="7" x2="14" y2="12"/>
+              <line x1="18" y1="7" x2="18" y2="10"/>
+            </svg>
+            <span>Ver guía de tallas</span>
+          </button>
+        </div>
+
+        <!-- Size Guide Drawer -->
+        <div *ngIf="showSizeGuide" class="size-guide-box card-flat">
+          <div class="guide-header">
+            <h4 class="title-2">¿Cómo medir tu uña con precisión?</h4>
+            <button type="button" (click)="toggleSizeGuide()" class="close-guide">✕</button>
+          </div>
+          <p class="body-5 guide-text">
+            Coloca cinta adhesiva sobre la parte más ancha de tu uña natural, marca los extremos con un bolígrafo y mide con una regla en milímetros.
+          </p>
+          <div class="size-table">
+            <div class="size-row" *ngFor="let s of sizes">
+              <strong class="caption-2">{{ s.label }}:</strong>
+              <span class="body-5">{{ s.dims }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Editorial Showcase & Quick Action Card -->
+      <div class="press-on-builder card-flat reveal-on-scroll reveal-right">
+        <div class="showcase-header">
+          <div class="proof-chip mb-2">
+            <span class="live-dot"></span>
+            <span class="caption-2">Sets Hechos 100% a Mano</span>
+          </div>
+          <h3 class="heading-3 builder-title">Personaliza tu Set Sin Complicaciones</h3>
+          <p class="body-5 builder-subtitle">
+            Olvídate de formularios largos. Configura forma, largo y medida en 3 toques y pide directamente por WhatsApp.
+          </p>
+        </div>
+
+        <div class="features-checklist mt-3">
+          <div class="feature-row">
+            <span class="check-icon">✓</span>
+            <div>
+              <strong class="caption-1 text-main">Medidas exactas en milímetros</strong>
+              <p class="body-5 text-muted">Ajuste anatómico perfecto que parece manicura de salón recién hecha.</p>
+            </div>
+          </div>
+          <div class="feature-row">
+            <span class="check-icon">✓</span>
+            <div>
+              <strong class="caption-1 text-main">Gel de construcción de alta densidad</strong>
+              <p class="body-5 text-muted">Reutilizables más de 5 veces sin quebrarse ni perder el brillo espejo.</p>
+            </div>
+          </div>
+          <div class="feature-row">
+            <span class="check-icon">✓</span>
+            <div>
+              <strong class="caption-1 text-main">Kit de aplicación profesional incluido</strong>
+              <p class="body-5 text-muted">Incluye adhesivos de silicona, lima de precisión y palito de naranjo.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-box mt-4">
+          <button type="button" (click)="goToCotizador()" class="btn-primary w-full cta-cotizador-btn">
+            <span>Personalizar mi Set en el Cotizador</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+          
+          <button type="button" (click)="toggleSizeGuide()" class="btn-secondary w-full mt-2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="7" width="20" height="10" rx="2" ry="2"/>
+              <line x1="6" y1="7" x2="6" y2="12"/>
+              <line x1="10" y1="7" x2="10" y2="10"/>
+              <line x1="14" y1="7" x2="14" y2="12"/>
+              <line x1="18" y1="7" x2="18" y2="10"/>
+            </svg>
+            <span>{{ showSizeGuide ? 'Ocultar guía de medidas' : 'Ver cómo medir mis uñas (mm)' }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

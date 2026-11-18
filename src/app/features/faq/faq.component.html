@@ -1,0 +1,48 @@
+<section id="faq" class="faq-section">
+  <div class="container">
+    <div class="section-header text-center">
+      <div class="proof-chip">
+        <span class="live-dot"></span>
+        <span class="caption-2">Resolviendo tus dudas</span>
+      </div>
+      <h2 class="heading-2">Preguntas frecuentes y condiciones</h2>
+      <p class="body-1 section-subtitle">
+        Todo lo que necesitas saber sobre traslados, protocolos de esterilización y confirmación de agenda.
+      </p>
+    </div>
+
+    <!-- FAQ Accordion List (Rule A2: 8 questions) -->
+    <div class="faq-list">
+      <div 
+        *ngFor="let item of faqList" 
+        class="faq-card card-flat"
+        [class.open]="openFaqId() === item.id">
+        <button 
+          type="button" 
+          (click)="toggleFaq(item.id)" 
+          class="faq-question-btn"
+          [attr.aria-expanded]="openFaqId() === item.id">
+          <span class="title-3 question-text">{{ item.question }}</span>
+          <span class="faq-toggle-icon">
+            <svg 
+              width="16" 
+              height="16" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              stroke-width="2.5" 
+              stroke-linecap="round" 
+              stroke-linejoin="round"
+              [class.rotated]="openFaqId() === item.id">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </span>
+        </button>
+
+        <div *ngIf="openFaqId() === item.id" class="faq-answer-body">
+          <p class="body-5 answer-text">{{ item.answer }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

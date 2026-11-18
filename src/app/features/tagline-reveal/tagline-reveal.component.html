@@ -1,0 +1,21 @@
+﻿<section #taglineSection class="tagline-section">
+  <div class="container tagline-container">
+    <div class="tagline-label caption-2">Filosofía Blue X Style</div>
+    
+    <div class="tagline-text-block heading-2">
+      <span 
+        *ngFor="let word of phraseWords; let i = index" 
+        class="reveal-word" 
+        [class.active]="i < activeWordIndex()">
+        {{ word }}&nbsp;
+      </span>
+    </div>
+
+    <div class="tagline-footer">
+      <div class="pill-badge caption-1">
+        <span class="dot"></span>
+        <span>Atención exclusiva con agenda previa</span>
+      </div>
+    </div>
+  </div>
+</section>

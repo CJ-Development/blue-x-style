@@ -1,0 +1,560 @@
+﻿.quote-section {
+  padding: 72px 0;
+  position: relative;
+  background-color: var(--bg-deep);
+
+  @media (max-width: 768px) {
+    padding: 44px 0;
+  }
+}
+
+.quote-card {
+  padding: 36px;
+  width: 100%;
+  box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    padding: 24px 16px;
+  }
+}
+
+.quote-header {
+  max-width: 720px;
+  margin: 0 auto 36px;
+}
+
+.proof-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-all);
+  border-radius: 9999px;
+  color: var(--accent-blue);
+  margin-bottom: 16px;
+
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #00ff88;
+    box-shadow: 0 0 8px #00ff88;
+  }
+}
+
+.quote-title {
+  color: var(--text-main);
+  margin-bottom: 10px;
+}
+
+.quote-subtitle {
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   MODE SWITCHER (Domicilio vs Press-On)
+   ========================================================================== */
+.mode-switcher-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-all);
+  border-radius: 9999px;
+  padding: 6px;
+  margin-top: 24px;
+  max-width: 100%;
+
+  @media (max-width: 600px) {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    width: 100%;
+  }
+}
+
+.mode-switch-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration-hover) var(--ease-base);
+  white-space: nowrap;
+
+  @media (max-width: 600px) {
+    width: 100%;
+    border-radius: 8px;
+    padding: 10px 14px;
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    color: var(--text-main);
+  }
+
+  &.active {
+    background: var(--primary-blue);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(31, 108, 159, 0.4);
+  }
+}
+
+/* ==========================================================================
+   WIZARD GRID
+   ========================================================================== */
+.wizard-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: 32px;
+  align-items: start;
+  margin-top: 28px;
+
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+.step-group {
+  margin-bottom: 24px;
+
+  .step-label {
+    display: block;
+    color: var(--accent-blue);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+  }
+}
+
+/* 1. Chips de Servicios Base */
+.service-chips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 10px;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.service-chip-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-all);
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--duration-hover) var(--ease-base);
+
+  &:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-1px);
+  }
+
+  &.active {
+    border-color: var(--accent-blue);
+    background: rgba(43, 138, 203, 0.12);
+    box-shadow: 0 0 0 1px var(--accent-blue);
+  }
+
+  .chip-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+
+    .chip-name {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .chip-price {
+      color: var(--accent-blue);
+      font-weight: 700;
+    }
+  }
+
+  .chip-duration {
+    color: var(--text-subtle);
+  }
+}
+
+/* 2. Chips de Complejidad / Nail Art */
+.complexity-chips-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.complexity-chip-card {
+  padding: 12px 14px;
+  border-radius: 8px;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-all);
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--duration-hover) var(--ease-base);
+
+  &:hover {
+    border-color: var(--border-strong);
+  }
+
+  &.active {
+    border-color: var(--accent-blue);
+    background: rgba(43, 138, 203, 0.12);
+    box-shadow: 0 0 0 1px var(--accent-blue);
+  }
+
+  .comp-chip-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+
+    strong {
+      color: var(--text-main);
+    }
+
+    .comp-chip-badge {
+      color: var(--accent-blue);
+      font-weight: 700;
+
+      &.free {
+        color: #00ff88;
+      }
+    }
+  }
+
+  .comp-chip-desc {
+    line-height: 1.35;
+  }
+}
+
+/* 3. Chips de Barrios */
+.neighborhood-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.nh-chip {
+  padding: 7px 14px;
+  border-radius: 9999px;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-all);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all var(--duration-hover) var(--ease-base);
+
+  &:hover {
+    color: var(--text-main);
+    border-color: var(--border-strong);
+  }
+
+  &.active {
+    background-color: var(--primary-blue);
+    border-color: var(--accent-blue);
+    color: #ffffff;
+  }
+}
+
+/* 4. Form inputs opcionales */
+.form-control {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 6px;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-all);
+  color: var(--text-main);
+  font-family: var(--font-body);
+
+  &:focus {
+    outline: 2px solid var(--border-focus);
+    outline-offset: 1px;
+    border-color: var(--border-focus);
+  }
+}
+
+.optional-details-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  @media (max-width: 540px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.opt-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.quick-file-upload {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  .file-hidden-input {
+    position: absolute;
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+  }
+
+  .file-label-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background-color: var(--bg-surface-elevated);
+    border: 1px dashed var(--border-all);
+    border-radius: 6px;
+    color: var(--text-muted);
+    cursor: pointer;
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: all var(--duration-hover) var(--ease-base);
+
+    &:hover {
+      border-color: var(--border-focus);
+      color: var(--accent-blue);
+    }
+  }
+
+  .remove-photo-btn {
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-weight: 700;
+    padding: 4px;
+  }
+}
+
+/* ==========================================================================
+   PRESS-ON MODE CHIPS & CONTROLS
+   ========================================================================== */
+.shapes-chips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.shape-chip-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+  border-radius: 8px;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-all);
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all var(--duration-hover) var(--ease-base);
+
+  .shape-icon {
+    font-size: 1.4rem;
+  }
+
+  &:hover {
+    border-color: var(--border-strong);
+  }
+
+  &.active {
+    border-color: var(--accent-blue);
+    background: rgba(43, 138, 203, 0.12);
+    box-shadow: 0 0 0 1px var(--accent-blue);
+  }
+}
+
+.lengths-chips-grid, .sizes-chips-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.len-chip-btn, .size-chip-btn {
+  flex: 1 1 70px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-all);
+  color: var(--text-main);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transition: all var(--duration-hover) var(--ease-base);
+
+  &:hover {
+    border-color: var(--border-strong);
+  }
+
+  &.active {
+    border-color: var(--accent-blue);
+    background: rgba(43, 138, 203, 0.12);
+    box-shadow: 0 0 0 1px var(--accent-blue);
+  }
+}
+
+.guide-toggle-btn {
+  background: none;
+  border: none;
+  color: var(--accent-blue);
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+
+  &:hover {
+    color: var(--text-main);
+  }
+}
+
+.size-guide-card {
+  padding: 14px;
+  background-color: var(--bg-deep);
+  border-radius: 8px;
+
+  .sizes-mini-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .size-mini-item {
+    display: flex;
+    gap: 6px;
+  }
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  @media (max-width: 540px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   TARJETA FLOTANTE DE RESUMEN
+   ========================================================================== */
+.summary-floating-card {
+  position: sticky;
+  top: 96px;
+  padding: 24px;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-focus);
+  border-radius: 12px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.25);
+
+  .summary-service-title {
+    color: var(--text-main);
+    margin: 6px 0 16px;
+  }
+
+  .summary-specs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-all);
+    margin-bottom: 16px;
+
+    .spec-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .summary-price-box {
+    margin-bottom: 20px;
+
+    .total-price-display {
+      color: var(--text-main);
+      font-weight: 800;
+      margin: 4px 0 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .abono-note {
+      line-height: 1.4;
+      color: var(--text-subtle);
+    }
+  }
+
+  .whatsapp-submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #185a8c 0%, #00d4ff 100%);
+    border: 1px solid #00d4ff;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(0, 212, 255, 0.35);
+    transition: all var(--duration-hover) var(--ease-base);
+
+    &:hover {
+      background: linear-gradient(135deg, #1f6c9f 0%, #38bdf8 100%);
+      border-color: #38bdf8;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(0, 212, 255, 0.55);
+    }
+
+    svg {
+      flex-shrink: 0;
+    }
+  }
+}
+
+.w-full {
+  width: 100%;
+}
+
+.mt-1 { margin-top: 4px; }
+.mt-2 { margin-top: 8px; }
+.mb-1 { margin-bottom: 4px; }
+.d-flex { display: flex; }
+.justify-between { justify-content: space-between; }
+.align-center { align-items: center; }
+.font-semibold { font-weight: 600; }

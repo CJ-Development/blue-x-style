@@ -1,0 +1,182 @@
+.booking-page-wrapper {
+  min-height: calc(100vh - 80px);
+  padding: 2.5rem 0 5rem;
+  position: relative;
+  overflow: hidden;
+
+  .glow-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+    z-index: 0;
+
+    &.glow-top {
+      width: 450px;
+      height: 450px;
+      top: -100px;
+      right: -100px;
+      background: radial-gradient(circle, rgba(31, 108, 159, 0.25) 0%, transparent 70%);
+    }
+
+    &.glow-bottom {
+      width: 500px;
+      height: 500px;
+      bottom: -150px;
+      left: -150px;
+      background: radial-gradient(circle, rgba(112, 192, 255, 0.15) 0%, transparent 70%);
+    }
+  }
+
+  .booking-container {
+    position: relative;
+    z-index: 1;
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  // Top navigation bar
+  .booking-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: 999px;
+      background: var(--bg-surface, #111e2d);
+      border: 1px solid var(--border-glass, rgba(155, 199, 230, 0.25));
+      color: var(--text-main, #f7fdfe);
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s ease;
+
+      &:hover {
+        background: var(--primary-blue, #1f6c9f);
+        color: #ffffff;
+        border-color: #70c0ff;
+        transform: translateX(-3px);
+      }
+    }
+
+    .vip-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #34d399;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+
+      .live-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #34d399;
+        box-shadow: 0 0 8px #34d399;
+        animation: pulseDot 2s infinite ease-in-out;
+      }
+    }
+  }
+
+  // Private Suite Header
+  .private-suite-header {
+    text-align: center;
+    max-width: 820px;
+    margin: 0 auto 3rem;
+
+    .badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1.1rem;
+      border-radius: 999px;
+      background: rgba(31, 108, 159, 0.15);
+      border: 1px solid var(--border-glass, rgba(155, 199, 230, 0.28));
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--accent-blue, #9bc7e6);
+      margin-bottom: 1.25rem;
+
+      .sparkle {
+        color: #70c0ff;
+      }
+    }
+
+    .page-title {
+      font-family: var(--font-heading, 'Syne', sans-serif);
+      font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-main, #f7fdfe);
+      margin-bottom: 1rem;
+      letter-spacing: 0.01em;
+    }
+
+    .chrome-text {
+      background: linear-gradient(135deg, #f7fdfe 0%, #9bc7e6 40%, #ffffff 60%, #70c0ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    .page-subtitle {
+      font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+      font-size: 1.05rem;
+      color: var(--text-muted, #9bc7e6);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .trust-pillars {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.25rem;
+
+      .pillar-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        background: var(--bg-surface, #111e2d);
+        border: 1px solid var(--border-glass, rgba(155, 199, 230, 0.18));
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--text-main, #f7fdfe);
+
+        svg {
+          color: #70c0ff;
+        }
+      }
+    }
+  }
+
+  .form-container-card {
+    position: relative;
+    z-index: 1;
+
+    // Remove extra margins from quote-section when hosted inside booking page
+    ::ng-deep .quote-section {
+      padding: 0 !important;
+      background: transparent !important;
+    }
+  }
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}

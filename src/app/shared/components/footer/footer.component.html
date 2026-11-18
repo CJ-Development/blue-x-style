@@ -1,0 +1,54 @@
+﻿<!-- Footer -->
+<footer class="main-footer">
+  <div class="container footer-container">
+    <div class="footer-brand">
+      <div class="brand-row">
+        <div class="footer-logo">
+          <img src="images/logo.jpg" alt="Blue X Style" />
+        </div>
+        <div>
+          <h3 class="heading-4 footer-title">BLUE X STYLE</h3>
+          <span class="caption-2 footer-by">BY YEYE · BOGOTÁ</span>
+        </div>
+      </div>
+      <p class="body-5 footer-bio">
+        Manicura rusa, nivelación con base rubber, polygel esculpido y press-on nails de alta costura a domicilio.
+      </p>
+    </div>
+
+    <div class="footer-links-group">
+      <h4 class="title-3">Navegación</h4>
+      <ul>
+        <li><a [routerLink]="['/']" fragment="inicio" class="body-5">Inicio</a></li>
+        <li><a [routerLink]="['/']" fragment="lookbook" class="body-5">Lookbook Real</a></li>
+        <li><a [routerLink]="['/']" fragment="servicios" class="body-5">Servicios & Tarifas</a></li>
+        <li><a [routerLink]="['/']" fragment="press-on" class="body-5">Press-On Nails</a></li>
+        <li><a routerLink="/preguntas-frecuentes" class="body-5">Preguntas Frecuentes</a></li>
+        <li><a routerLink="/politicas" class="body-5">Políticas de Atención</a></li>
+        <li><a [routerLink]="['/']" fragment="cotizador" class="body-5">Cotizador a Domicilio</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-social-group">
+      <h4 class="title-3">Instagram oficial</h4>
+      <p class="body-5 text-subtle">Sigue el trabajo diario y lanzamientos de nuevas colecciones:</p>
+      <a href="https://www.instagram.com/bxs_nails" target="_blank" rel="noopener noreferrer" class="social-badge caption-2">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+        </svg>
+        <span>@bxs_nails</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container bottom-content">
+      <p class="caption-1 copyright-text">© {{ currentYear }} Blue X Style by Yeye. Todos los derechos reservados.</p>
+      <div class="legal-links">
+        <span class="caption-1 text-subtle">Manicura a domicilio · Bogotá, Colombia</span>
+      </div>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,120 @@
+.faq-page-container {
+  padding: 100px 0 80px;
+  min-height: 80vh;
+  background-color: var(--bg-deep);
+}
+
+.back-nav-bar {
+  margin-bottom: 24px;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent-blue);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-all);
+  transition: all var(--duration-hover) var(--ease-base);
+
+  &:hover {
+    border-color: var(--border-focus);
+    color: var(--text-main);
+    transform: translateX(-2px);
+  }
+}
+
+.faq-page-header {
+  max-width: 680px;
+  margin: 0 auto 40px;
+
+  .page-title {
+    color: var(--text-main);
+    margin: 12px 0 10px;
+  }
+
+  .page-subtitle {
+    color: var(--text-muted);
+  }
+}
+
+.proof-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-all);
+  border-radius: 6px;
+  color: var(--accent-blue);
+
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #00ff88;
+  }
+}
+
+.faq-embed-wrapper {
+  margin-bottom: 50px;
+
+  ::ng-deep .faq-section {
+    padding: 0;
+    background: transparent;
+    border: none;
+
+    .section-header {
+      display: none;
+    }
+  }
+}
+
+.faq-contact-card {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 36px 24px;
+
+  .contact-icon-frame {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background-color: var(--bg-surface-elevated);
+    border: 1px solid var(--border-all);
+    color: #25d366;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    color: var(--text-main);
+    margin-bottom: 8px;
+  }
+
+  .contact-desc {
+    color: var(--text-muted);
+    max-width: 520px;
+    margin: 0 auto 20px;
+  }
+
+  .contact-btn-wrap {
+    display: flex;
+    justify-content: center;
+
+    .whatsapp-contact-btn {
+      background-color: #25d366;
+      border-color: #25d366;
+      color: #fff;
+      padding: 10px 18px;
+
+      &:hover {
+        background-color: #20ba5a;
+      }
+    }
+  }
+}

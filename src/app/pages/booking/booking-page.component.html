@@ -1,0 +1,72 @@
+<div class="booking-page-wrapper">
+  <!-- Glowing background elements -->
+  <div class="glow-orb glow-top"></div>
+  <div class="glow-orb glow-bottom"></div>
+
+  <div class="container booking-container">
+    <!-- Back to Showcase Breadcrumb -->
+    <div class="booking-top-bar">
+      <a routerLink="/" class="back-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        <span>Volver a la Galería & Studio 3D</span>
+      </a>
+
+      <div class="vip-badge">
+        <span class="live-dot"></span>
+        <span>AGENDA PRIVADA DISPONIBLE</span>
+      </div>
+    </div>
+
+    <!-- Private Studio Intro Banner -->
+    <div class="private-suite-header">
+      <div class="badge-tag">
+        <span class="sparkle">✦</span>
+        <span>PORTAL PRIVADO DE CITAS · ATENCIÓN EXCLUSIVA A DOMICILIO</span>
+      </div>
+
+      <h1 class="page-title">
+        Reserva tu Cita & <span class="chrome-text">Cotizador Oficial</span>
+      </h1>
+
+      <p class="page-subtitle">
+        Al tratarse de atención personalizada a domicilio en Medellín y área metropolitana, calculamos con exactitud los insumos, tiempo de manicura y logística para tu fecha ideal.
+      </p>
+
+      <!-- Trust Pillars Badges -->
+      <div class="trust-pillars">
+        <div class="pillar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <span>Abono seguro del 20%</span>
+        </div>
+
+        <div class="pillar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 3h12l4 6-10 12L2 9z"/>
+          </svg>
+          <span>Insumos Pro Esterilizados</span>
+        </div>
+
+        <div class="pillar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <span>Confirmación Inmediata WhatsApp</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Embedded Quote & Booking Component -->
+    <div class="form-container-card">
+      <app-quote-modal 
+        [preselectedServiceId]="selectedServiceId()"
+        [initialNotes]="designNotes()">
+      </app-quote-modal>
+    </div>
+  </div>
+</div>

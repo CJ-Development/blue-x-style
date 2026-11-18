@@ -1,0 +1,91 @@
+﻿<section class="hero-section" id="inicio">
+  <div class="container hero-container">
+    <!-- Left Column: Copy & Value Proposition -->
+    <div class="hero-content">
+      <div class="proof-chip">
+        <span class="live-dot"></span>
+        <span class="caption-2">Estudio Móvil VIP · Manicura & Pedicura en Bogotá</span>
+      </div>
+
+      <h1 class="hero-title heading-1">
+        <span class="hero-gradient-text">Manicura Rusa, Semipermanente & Polygel</span><br>
+        <span class="hero-subtext brush-stroke-text">A Domicilio en Bogotá</span>
+      </h1>
+
+      <p class="hero-description body-1">
+        Uñas impecables y duraderas por más de 21 días en la comodidad de tu hogar. 
+        Especialistas en técnica rusa combinada, nivelación rubber, polygel esculpido y nail art de autor.
+      </p>
+
+      <div class="hero-ctas">
+        <a [routerLink]="['/']" fragment="cotizador" class="btn-primary">
+          <span>Cotizar cita a domicilio</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+
+        <a [routerLink]="['/']" fragment="servicios" class="btn-secondary">
+          <span>Ver catálogo de tarifas</span>
+        </a>
+      </div>
+
+      <!-- Proof line directly below CTA -->
+      <div class="hero-proof-line">
+        <div class="stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+        <span class="proof-text caption-1">4.9/5 en satisfacción · Más de 300 citas atendidas en Bogotá</span>
+      </div>
+    </div>
+
+    <!-- Right Column: Editorial Showcase Card -->
+    <div class="hero-showcase-wrapper">
+      <div class="showcase-card card-flat">
+        <div class="showcase-top">
+          <span class="caption-2 text-accent">{{ currentStyle.badge }}</span>
+          <span class="caption-1 price-highlight">{{ currentStyle.price }}</span>
+        </div>
+
+        <!-- Featured Photo Frame -->
+        <div class="photo-frame">
+          <img 
+            [src]="currentStyle.image" 
+            [alt]="currentStyle.title" 
+            class="showcase-img"
+          />
+          <div class="photo-overlay">
+            <span class="caption-2 overlay-chip">{{ currentStyle.duration }}</span>
+          </div>
+        </div>
+
+        <!-- Info details -->
+        <div class="showcase-body">
+          <h3 class="heading-4 text-display">{{ currentStyle.title }}</h3>
+          <p class="body-5 text-muted">{{ currentStyle.technique }}</p>
+
+          <!-- Thumbnails Selector -->
+          <div class="thumbs-grid">
+            <button
+              type="button"
+              *ngFor="let style of featuredStyles; let i = index"
+              (click)="selectStyle(i)"
+              [class.active]="selectedStyleIndex() === i"
+              class="thumb-item brush-interactive"
+              [title]="style.title">
+              <img [src]="style.image" [alt]="style.title" class="thumb-img" />
+              <span class="thumb-name">{{ style.title.split(' ')[0] }}</span>
+            </button>
+          </div>
+
+          <a [routerLink]="['/']" fragment="cotizador" class="btn-primary w-full">
+            <span>Cotizar este estilo</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

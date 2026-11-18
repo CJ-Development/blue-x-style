@@ -1,0 +1,163 @@
+<section class="lookbook-section" id="lookbook">
+  <div class="container">
+    <!-- Header -->
+    <div class="section-header reveal-on-scroll">
+      <div class="proof-chip">
+        <span class="live-dot"></span>
+        <span class="caption-2">Portafolio oficial de Blue X Style</span>
+      </div>
+      <h2 class="heading-2">
+        <span>Lookbook de</span> <span class="brush-stroke-text">diseños reales</span>
+      </h2>
+      <p class="body-1 section-subtitle">
+        Cada set es una pieza única realizada con técnica de precisión, nivelación anatómica y pigmentos de alta gama. 
+        Haz clic en cualquier fotografía para ver el detalle y cotizar directamente.
+      </p>
+
+      <!-- Category Filter Tabs -->
+      <div class="category-filters">
+        <button
+          type="button"
+          *ngFor="let cat of categories"
+          (click)="setCategory(cat)"
+          [class.active]="selectedCategory() === cat"
+          class="filter-pill caption-2 brush-interactive">
+          {{ cat }}
+          <span class="count-badge" *ngIf="cat === 'Todos'">{{ items.length }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div class="lookbook-grid reveal-on-scroll reveal-stagger">
+      <div 
+        class="lookbook-card card-flat brush-interactive"
+        *ngFor="let item of filteredItems()"
+        [class.featured]="item.featured">
+        
+        <!-- Image Container -->
+        <div class="card-img-wrapper" (click)="openZoom(item)">
+          <img 
+            [src]="item.imageUrl" 
+            [alt]="item.title"
+            loading="lazy"
+            class="card-img" />
+          
+          <div class="card-img-overlay">
+            <span class="zoom-btn-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                <line x1="11" y1="8" x2="11" y2="14"/>
+                <line x1="8" y1="11" x2="14" y2="11"/>
+              </svg>
+            </span>
+            <span class="caption-2 zoom-text">Ampliar detalle</span>
+          </div>
+
+          <span class="category-badge caption-2">{{ item.category }}</span>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body">
+          <div class="card-meta caption-1">
+            <span class="meta-tag">{{ item.shape }}</span>
+            <span class="meta-tag dot-sep">·</span>
+            <span class="meta-tag">{{ item.length }}</span>
+          </div>
+
+          <h3 class="heading-4 card-title">{{ item.title }}</h3>
+          <p class="body-5 card-technique">{{ item.technique }}</p>
+
+          <div class="card-footer-cta">
+            <a 
+              href="#cotizador" 
+              class="btn-secondary w-full">
+              <span>Cotizar este diseño</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Google Photos Album Banner -->
+    <div class="album-invite-banner card-flat reveal-on-scroll">
+      <div class="banner-visual">
+        <div class="photos-icon-wrapper">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="banner-content">
+        <h4 class="heading-4 banner-title">¿Buscas aún más inspiración para tu próxima cita?</h4>
+        <p class="body-4 banner-desc">
+          Explora la galería completa con más de 65 fotografías reales de clientes, sets personalizados y diseños Y2K actualizados en el álbum oficial.
+        </p>
+      </div>
+
+      <div class="banner-action">
+        <a 
+          href="https://photos.google.com/share/AF1QipNizQ-MiVMvi3Zf_kX6r3JefSmc_Sv7tBH2uFcWpoW7w7YT_5F5UP0jyetItmLWMA?pli=1&key=M2p3cFphbzFVRUNrUXE1cFRkWnFLM0Qtb0hjRmln" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="btn-primary album-btn">
+          <span>Ver álbum en Google Fotos</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/>
+            <line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- High-Res Zoom Modal -->
+  <div 
+    class="zoom-modal-backdrop" 
+    *ngIf="activePhotoZoom()" 
+    (click)="closeZoom()">
+    <div class="zoom-modal-box card-flat" (click)="$event.stopPropagation()">
+      <button class="modal-close-btn" (click)="closeZoom()" aria-label="Cerrar modal">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+
+      <div class="modal-img-wrapper">
+        <img 
+          [src]="activePhotoZoom()?.imageUrl" 
+          [alt]="activePhotoZoom()?.title"
+          class="modal-img" />
+      </div>
+
+      <div class="modal-info">
+        <div class="modal-tags">
+          <span class="category-badge caption-2">{{ activePhotoZoom()?.category }}</span>
+          <span class="caption-1 text-muted">{{ activePhotoZoom()?.shape }} · {{ activePhotoZoom()?.length }}</span>
+        </div>
+        <h3 class="heading-3 modal-title">{{ activePhotoZoom()?.title }}</h3>
+        <p class="body-4 modal-technique">{{ activePhotoZoom()?.technique }}</p>
+        <div class="modal-cta-row">
+          <a 
+            href="#cotizador" 
+            (click)="closeZoom()" 
+            class="btn-primary w-full">
+            <span>Cotizar este set para cita</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
