@@ -1,14 +1,23 @@
 <!-- 1. Hero & Featured Studio Showcase -->
-<app-hero></app-hero>
+<app-hero (selectHeroService)="onServiceSelected($event)"></app-hero>
 
-<!-- 2. Tagline Reveal Section (Mandatory Rule B11) -->
+<!-- 2. Tagline Reveal Section -->
 <app-tagline-reveal></app-tagline-reveal>
 
-<!-- 3. Catálogo & Lookbook Unificado (Servicios, Diseños Reales & Tarifas) -->
+<!-- 3. Galería Editorial en Movimiento (Carrusel Guiado por Scroll) -->
+<app-scroll-carousel (selectDesign)="onCarouselDesignSelected($event)"></app-scroll-carousel>
+
+<!-- 4. Catálogo & Lookbook Unificado (Servicios, Diseños Reales & Tarifas) -->
 <app-services-list (selectServiceForQuote)="onServiceSelected($event)"></app-services-list>
 
-<!-- 5. Press-On Nails: Uñas Reutilizables a Medida (Envíos Nacionales) -->
+<!-- 5. Transformación Antes / Después & Reseñas Verificadas -->
+<app-social-proof></app-social-proof>
+
+<!-- 6. Press-On Nails: Uñas Reutilizables a Medida (Envíos Nacionales) -->
 <app-press-on></app-press-on>
 
-<!-- 6. Cotizador Interactivo a Domicilio (Destino de Scroll Fluido) -->
-<app-quote-modal [preselectedServiceId]="selectedServiceId()"></app-quote-modal>
+<!-- 7. Cotizador Exclusivo de Sets Press-On Nails -->
+<app-quote-modal
+  [preselectedServiceId]="selectedServiceId()"
+  [initialNotes]="selectedDesignNote()">
+</app-quote-modal>

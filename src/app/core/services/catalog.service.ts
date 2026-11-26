@@ -230,9 +230,9 @@ export const INITIAL_PRESS_ON_SETTINGS: PressOnSettings = {
 };
 
 export const INITIAL_COTIZADOR_CONTENT: CotizadorContent = {
-  badge: 'Cotizador Express sin Formularios Largos',
-  title: 'Cotiza y Consulta Disponibilidad',
-  subtitle: 'Elige lo que necesitas en 3 toques. Al finalizar, consultarás fechas y horarios directamente por WhatsApp.',
+  badge: 'Personalizador Express · Envíos a Toda Colombia',
+  title: 'Cotiza tu Set Press-On a Medida',
+  subtitle: 'Configura forma, largo y talla en 3 toques y encarga tu set reutilizable hecho a mano por WhatsApp.',
   depositNote: '* Para asegurar el cupo en tu puerta se solicita un abono del 20%.'
 };
 
@@ -486,6 +486,51 @@ export class CatalogService {
     });
   }
 
+  exportCatalogSnapshot(): string {
+    return JSON.stringify(
+      {
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        services: this.services(),
+        heroStyles: this.heroStyles(),
+        complexityLevels: this.complexityLevels(),
+        pressOnSettings: this.pressOnSettings(),
+        cotizadorContent: this.cotizadorContent()
+      },
+      null,
+      2
+    );
+  }
+
+  importCatalogSnapshot(jsonText: string): boolean {
+    try {
+      const data = JSON.parse(jsonText);
+      if (Array.isArray(data.services) && data.services.length > 0) {
+        this.services.set(data.services);
+        this.persistServices(data.services);
+      }
+      if (Array.isArray(data.heroStyles) && data.heroStyles.length > 0) {
+        this.heroStyles.set(data.heroStyles);
+        this.persistHeroStyles(data.heroStyles);
+      }
+      if (Array.isArray(data.complexityLevels) && data.complexityLevels.length > 0) {
+        this.complexityLevels.set(data.complexityLevels);
+        this.persistComplexityLevels(data.complexityLevels);
+      }
+      if (data.pressOnSettings && typeof data.pressOnSettings === 'object') {
+        this.pressOnSettings.set(data.pressOnSettings);
+        this.persistPressOnSettings(data.pressOnSettings);
+      }
+      if (data.cotizadorContent && typeof data.cotizadorContent === 'object') {
+        this.cotizadorContent.set(data.cotizadorContent);
+        this.persistCotizadorContent(data.cotizadorContent);
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   resetToDefaults() {
     try {
       localStorage.removeItem(STORAGE_KEY);
@@ -509,7 +554,32 @@ export class CatalogService {
   async convertFileToBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
+      reader.onload = () => {
+        const rawDataUrl = reader.result as string;
+        // Comprimir automáticamente para evitar desbordar localStorage con fotos pesadas
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 960;
+          let { width, height } = img;
+          if (width > maxDim || height > maxDim) {
+            const ratio = Math.min(maxDim / width, maxDim / height);
+            width = Math.round(width * ratio);
+            height = Math.round(height * ratio);
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            resolve(rawDataUrl);
+            return;
+          }
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', 0.8));
+        };
+        img.onerror = () => resolve(rawDataUrl);
+        img.src = rawDataUrl;
+      };
       reader.onerror = error => reject(error);
       reader.readAsDataURL(file);
     });

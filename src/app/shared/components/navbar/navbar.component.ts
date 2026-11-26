@@ -9,18 +9,21 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ThemeService } from '../../../core/services/theme.service';
+import { FlyToCartService } from '../../../core/services/fly-to-cart.service';
+import { MagneticDirective } from '../../directives/magnetic.directive';
 
 export type NavSection = 'inicio' | 'catalogo' | 'lookbook' | 'servicios' | 'press-on' | 'cotizador';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, MagneticDirective],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   themeService = inject(ThemeService);
+  flyToCartService = inject(FlyToCartService);
   private platformId = inject(PLATFORM_ID);
 
   activeSection = signal<NavSection>('inicio');
@@ -37,6 +40,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   private initScrollSpy() {
+    if (typeof IntersectionObserver === 'undefined') return;
     const sectionIds: string[] = ['inicio', 'catalogo', 'lookbook', 'servicios', 'press-on', 'cotizador'];
     
     // Intersection observer con threshold balanceado para vista móvil

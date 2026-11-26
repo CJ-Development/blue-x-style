@@ -2,11 +2,16 @@
   padding: 64px 0 72px;
   border-top: 1px solid var(--border-all);
   border-bottom: 1px solid var(--border-all);
-  background-color: var(--bg-surface);
+  background: rgba(18, 26, 36, 0.52);
+  backdrop-filter: blur(4px);
 
   @media (max-width: 768px) {
     padding: 40px 0 48px;
   }
+}
+
+:host-context([data-theme="light"]) .tagline-section {
+  background: rgba(255, 255, 255, 0.55);
 }
 
 .tagline-container {

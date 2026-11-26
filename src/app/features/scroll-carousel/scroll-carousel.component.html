@@ -1,0 +1,64 @@
+<section
+  #carouselSection
+  class="scroll-carousel-section"
+  aria-label="Galería en movimiento guiada por scroll"
+  (mouseenter)="isHovered.set(true)"
+  (mouseleave)="isHovered.set(false)">
+
+  <div class="container carousel-header text-center">
+    <div class="proof-chip">
+      <span class="live-dot"></span>
+      <span class="caption-2">Galería en Movimiento · Desliza para Explorar</span>
+    </div>
+    <h2 class="heading-2 carousel-title">
+      <app-split-text text="Arte Real en Cada Detalle" [staggerMs]="24"></app-split-text>
+    </h2>
+    <p class="body-5 carousel-hint">
+      Haz scroll para mover la pasarela o toca cualquier diseño para enviarlo volando a tu cotización.
+    </p>
+  </div>
+
+  <!-- Carril 1: Movimiento hacia la izquierda guiado por scroll -->
+  <div class="carousel-viewport">
+    <div #topTrack class="carousel-track">
+      <button
+        type="button"
+        *ngFor="let item of topRow"
+        (click)="onPickDesign(item, $event)"
+        class="reel-card brush-interactive"
+        [title]="'Cotizar diseño: ' + item.title">
+        <div class="reel-img-wrap">
+          <img [src]="item.imageUrl" [alt]="item.title" loading="lazy" decoding="async" class="reel-img" />
+          <span class="reel-cat caption-2">{{ item.category }}</span>
+          <span class="reel-action-pill caption-2">+ Cotizar</span>
+        </div>
+        <div class="reel-meta">
+          <strong class="body-4 reel-name">{{ item.title }}</strong>
+          <span class="caption-2 reel-tech">{{ item.shape }} · {{ item.length }}</span>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Carril 2: Movimiento en sentido inverso (hacia la derecha) -->
+  <div class="carousel-viewport mt-row">
+    <div #bottomTrack class="carousel-track">
+      <button
+        type="button"
+        *ngFor="let item of bottomRow"
+        (click)="onPickDesign(item, $event)"
+        class="reel-card brush-interactive"
+        [title]="'Cotizar diseño: ' + item.title">
+        <div class="reel-img-wrap">
+          <img [src]="item.imageUrl" [alt]="item.title" loading="lazy" decoding="async" class="reel-img" />
+          <span class="reel-cat caption-2">{{ item.category }}</span>
+          <span class="reel-action-pill caption-2">+ Cotizar</span>
+        </div>
+        <div class="reel-meta">
+          <strong class="body-4 reel-name">{{ item.title }}</strong>
+          <span class="caption-2 reel-tech">{{ item.shape }} · {{ item.length }}</span>
+        </div>
+      </button>
+    </div>
+  </div>
+</section>

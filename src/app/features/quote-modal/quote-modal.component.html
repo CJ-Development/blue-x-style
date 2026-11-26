@@ -2,7 +2,7 @@
   <div class="container">
     <div class="quote-card card-flat" [class.canva-active]="catalogService.isEditMode()">
       
-      <!-- Section Header -->
+      <!-- Section Header (Exclusivo para Sets Press-On Nails) -->
       <div class="quote-header text-center">
         <div class="proof-chip">
           <span class="live-dot"></span>
@@ -15,14 +15,19 @@
             {{ cotizadorContent.badge }}
           </span>
         </div>
+
         <h2 
-          class="heading-2 quote-title"
-          [attr.contenteditable]="catalogService.isEditMode()"
+          *ngIf="catalogService.isEditMode()"
+          class="heading-2 quote-title canva-editable"
+          contenteditable="true"
           (blur)="updateCotizadorField('title', $event)"
-          [class.canva-editable]="catalogService.isEditMode()"
-          [title]="catalogService.isEditMode() ? 'Clic para editar título' : ''">
+          title="Clic para editar título">
           {{ cotizadorContent.title }}
         </h2>
+        <h2 *ngIf="!catalogService.isEditMode()" class="heading-2 quote-title">
+          <app-split-text [text]="cotizadorContent.title" [staggerMs]="22"></app-split-text>
+        </h2>
+
         <p 
           class="body-1 quote-subtitle"
           [attr.contenteditable]="catalogService.isEditMode()"
@@ -32,262 +37,19 @@
           {{ cotizadorContent.subtitle }}
         </p>
 
-        <!-- Mode Switcher Tabs -->
-        <div class="mode-switcher-container">
-          <button 
-            type="button" 
-            class="mode-switch-btn" 
-            [class.active]="bookingMode() === 'domicilio'"
-            (click)="setMode('domicilio')">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-              <polyline points="9 22 9 12 15 12 15 22"/>
-            </svg>
-            <span>Cita a Domicilio (Bogotá)</span>
-          </button>
-
-          <button 
-            type="button" 
-            class="mode-switch-btn" 
-            [class.active]="bookingMode() === 'press-on'"
-            (click)="setMode('press-on')">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
-              <line x1="3" y1="9" x2="21" y2="9"/>
-              <line x1="9" y1="21" x2="9" y2="9"/>
-            </svg>
-            <span>Set Press-On (Envíos Colombia)</span>
+        <!-- Acceso directo al Carrito de Citas a Domicilio -->
+        <div class="domicilio-cart-hint mt-2">
+          <span class="caption-2 text-subtle">¿Buscas cita a domicilio en Bogotá?</span>
+          <button type="button" (click)="openAppointmentCart()" class="open-cart-link caption-2">
+            Abrir mi Carrito de Cita ({{ cartService.totalCount() }}) →
           </button>
         </div>
       </div>
 
       <!-- ========================================== -->
-      <!-- CASO 1: CITA A DOMICILIO EN BOGOTÁ -->
+      <!-- COTIZADOR EXCLUSIVO DE SETS PRESS-ON -->
       <!-- ========================================== -->
-      <div *ngIf="bookingMode() === 'domicilio'" class="wizard-grid">
-        
-        <!-- Columna Izquierda: Selección Táctil Rápida -->
-        <div class="wizard-selection-col">
-          
-          <!-- 1. Servicio -->
-          <div class="step-group">
-            <label class="step-label caption-2">1. Selecciona tu servicio base:</label>
-            <div class="service-chips-grid">
-              <div 
-                *ngFor="let s of services"
-                class="service-chip-wrapper"
-                [class.active]="selectedServiceId === s.id">
-                
-                <button 
-                  type="button"
-                  (click)="selectService(s.id)"
-                  class="service-chip-card">
-                  <!-- Miniatura de foto del servicio -->
-                  <div class="chip-media" *ngIf="s.imageUrl">
-                    <img [src]="s.imageUrl" [alt]="s.name" class="chip-thumbnail">
-                  </div>
-                  
-                  <div class="chip-info">
-                    <div class="chip-top">
-                      <span 
-                        class="chip-name body-4"
-                        [attr.contenteditable]="catalogService.isEditMode()"
-                        (blur)="updateServiceName(s.id, $event)"
-                        [class.canva-editable]="catalogService.isEditMode()"
-                        (click)="$event.stopPropagation()"
-                        [title]="catalogService.isEditMode() ? 'Clic para editar nombre' : ''">
-                        {{ s.name }}
-                      </span>
-                      <span 
-                        class="chip-price caption-1"
-                        [attr.contenteditable]="catalogService.isEditMode()"
-                        (blur)="updateServicePrice(s.id, $event)"
-                        [class.canva-editable]="catalogService.isEditMode()"
-                        (click)="$event.stopPropagation()"
-                        [title]="catalogService.isEditMode() ? 'Clic para editar precio' : ''">
-                        {{ formatPrice(s.basePrice) }}
-                      </span>
-                    </div>
-                    <span 
-                      class="chip-duration caption-2 text-subtle"
-                      [attr.contenteditable]="catalogService.isEditMode()"
-                      (blur)="updateServiceDuration(s.id, $event)"
-                      [class.canva-editable]="catalogService.isEditMode()"
-                      (click)="$event.stopPropagation()"
-                      [title]="catalogService.isEditMode() ? 'Clic para editar duración' : ''">
-                      {{ s.durationEstimate }}
-                    </span>
-                  </div>
-                </button>
-
-                <!-- Botón Canva para cambiar foto de este servicio -->
-                <label *ngIf="catalogService.isEditMode()" class="canva-chip-camera-btn" [title]="'Cambiar foto de ' + s.name">
-                  <input type="file" accept="image/*" (change)="onServicePhotoChange(s.id, $event)" class="hidden-file-input">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                    <circle cx="12" cy="13" r="4"/>
-                  </svg>
-                </label>
-
-              </div>
-            </div>
-          </div>
-
-          <!-- 2. Diseño / Nail Art -->
-          <div class="step-group">
-            <label class="step-label caption-2">2. Estilo de diseño deseado:</label>
-            <div class="complexity-chips-grid">
-              <div 
-                *ngFor="let c of complexityLevels"
-                class="complexity-chip-wrapper"
-                [class.active]="selectedComplexityId === c.id">
-                
-                <button 
-                  type="button"
-                  (click)="selectComplexity(c.id)"
-                  class="complexity-chip-card">
-                  <!-- Miniatura de foto de diseño -->
-                  <div class="comp-media" *ngIf="c.imageUrl">
-                    <img [src]="c.imageUrl" [alt]="c.title" class="comp-thumbnail">
-                  </div>
-                  
-                  <div class="comp-info">
-                    <div class="comp-chip-top">
-                      <strong 
-                        class="title-3"
-                        [attr.contenteditable]="catalogService.isEditMode()"
-                        (blur)="updateComplexityTitle(c.id, $event)"
-                        [class.canva-editable]="catalogService.isEditMode()"
-                        (click)="$event.stopPropagation()"
-                        [title]="catalogService.isEditMode() ? 'Clic para editar título' : ''">
-                        {{ c.title }}
-                      </strong>
-                      <span 
-                        class="comp-chip-badge caption-2" 
-                        [class.free]="c.extraPrice === 0"
-                        [attr.contenteditable]="catalogService.isEditMode()"
-                        (blur)="updateComplexityExtraPrice(c.id, $event)"
-                        [class.canva-editable]="catalogService.isEditMode()"
-                        (click)="$event.stopPropagation()"
-                        [title]="catalogService.isEditMode() ? 'Clic para editar recargo' : ''">
-                        {{ c.extraPrice === 0 ? 'Sin recargo' : '+ ' + formatPrice(c.extraPrice) }}
-                      </span>
-                    </div>
-                    <p 
-                      class="body-5 text-muted comp-chip-desc"
-                      [attr.contenteditable]="catalogService.isEditMode()"
-                      (blur)="updateComplexitySubtitle(c.id, $event)"
-                      [class.canva-editable]="catalogService.isEditMode()"
-                      (click)="$event.stopPropagation()"
-                      [title]="catalogService.isEditMode() ? 'Clic para editar descripción' : ''">
-                      {{ c.subtitle }}
-                    </p>
-                  </div>
-                </button>
-
-                <!-- Botón Canva para cambiar foto de este diseño -->
-                <label *ngIf="catalogService.isEditMode()" class="canva-chip-camera-btn" [title]="'Cambiar foto de ' + c.title">
-                  <input type="file" accept="image/*" (change)="onComplexityPhotoChange(c.id, $event)" class="hidden-file-input">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                    <circle cx="12" cy="13" r="4"/>
-                  </svg>
-                </label>
-
-              </div>
-            </div>
-          </div>
-
-          <!-- 3. Zona en Bogotá -->
-          <div class="step-group">
-            <label class="step-label caption-2">3. ¿En qué sector o barrio de Bogotá te encuentras?:</label>
-            <div class="neighborhood-chips-row">
-              <button 
-                type="button"
-                *ngFor="let nh of popularNeighborhoods"
-                (click)="selectNeighborhood(nh)"
-                [class.active]="selectedNeighborhood === nh"
-                class="nh-chip caption-2">
-                {{ nh }}
-              </button>
-            </div>
-
-            <!-- Input extra si elige "Otro barrio" -->
-            <div *ngIf="selectedNeighborhood === 'Otro barrio'" class="mt-2">
-              <input 
-                type="text" 
-                [(ngModel)]="customNeighborhood" 
-                placeholder="Escribe tu barrio o localidad (ej. Modelia, Hayuelos, Cedro Golf)" 
-                class="form-control body-5" 
-              />
-            </div>
-          </div>
-
-          <!-- 4. Nombre opcional -->
-          <div class="step-group">
-            <label class="step-label caption-2">4. Tu nombre (opcional):</label>
-            <input type="text" [(ngModel)]="clientName" placeholder="¿Cómo te llamas? (ej. Camila)" class="form-control body-5" />
-          </div>
-
-        </div>
-
-        <!-- Columna Derecha: Tarjeta de Resumen y Botón WhatsApp -->
-        <div class="wizard-summary-col">
-          <div class="summary-floating-card card-flat">
-            <span class="caption-2 text-accent">Resumen de tu selección</span>
-            <h3 class="heading-4 summary-service-title">{{ currentServiceName }}</h3>
-            
-            <div class="summary-specs">
-              <div class="spec-row">
-                <span class="body-5 text-muted">Diseño:</span>
-                <span class="body-5 text-main font-semibold">{{ currentComplexityTitle }}</span>
-              </div>
-              <div class="spec-row">
-                <span class="body-5 text-muted">Zona:</span>
-                <span class="body-5 text-main font-semibold">
-                  {{ selectedNeighborhood === 'Otro barrio' && customNeighborhood ? customNeighborhood : selectedNeighborhood }}
-                </span>
-              </div>
-              <div class="spec-row">
-                <span class="body-5 text-muted">Duración:</span>
-                <span class="body-5 text-accent font-semibold">{{ quoteResult.durationText }}</span>
-              </div>
-            </div>
-
-            <div class="summary-price-box">
-              <span class="caption-2 text-subtle">Cotización total estimada</span>
-              <div class="heading-2 total-price-display">{{ formatPrice(quoteResult.totalEstimated) }}</div>
-              <p 
-                class="caption-2 text-subtle abono-note"
-                [attr.contenteditable]="catalogService.isEditMode()"
-                (blur)="updateCotizadorField('depositNote', $event)"
-                [class.canva-editable]="catalogService.isEditMode()"
-                [title]="catalogService.isEditMode() ? 'Clic para editar nota de abono' : ''">
-                {{ cotizadorContent.depositNote }} (${{ formatPrice(quoteResult.depositAmount) }}).
-              </p>
-            </div>
-
-            <button 
-              type="button" 
-              (click)="sendAvailabilityQuery()" 
-              class="btn-primary w-full whatsapp-submit-btn">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/>
-              </svg>
-              <span>Preguntar disponibilidad en WhatsApp</span>
-            </button>
-            <p class="caption-2 text-center text-subtle mt-2">
-              Se abrirá tu WhatsApp con el servicio seleccionado para consultar horarios con Yeye.
-            </p>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- ========================================== -->
-      <!-- CASO 2: SETS PRESS-ON (ENVÍOS COLOMBIA) -->
-      <!-- ========================================== -->
-      <div *ngIf="bookingMode() === 'press-on'" class="wizard-grid">
+      <div class="wizard-grid">
         
         <div class="wizard-selection-col">
           
@@ -303,8 +65,10 @@
                 <button 
                   type="button"
                   (click)="pressOnData.shape = sh.id"
+                  [appHoverImageReveal]="catalogService.isEditMode() ? '' : (sh.imageUrl || '')"
+                  [revealLabel]="'Forma ' + sh.label"
                   class="shape-chip-btn">
-                  <img *ngIf="sh.imageUrl" [src]="sh.imageUrl" [alt]="sh.label" class="shape-thumbnail">
+                  <img *ngIf="sh.imageUrl" [src]="sh.imageUrl" [alt]="sh.label" loading="lazy" decoding="async" class="shape-thumbnail">
                   <span 
                     class="body-4 font-semibold"
                     [attr.contenteditable]="catalogService.isEditMode()"
@@ -379,16 +143,21 @@
             </div>
           </div>
 
-          <!-- 4. Ciudad y Temática -->
+          <!-- 4. Ciudad, Nombre y Temática -->
           <div class="step-group form-row-2">
             <div>
               <label class="caption-2 text-subtle">Ciudad de envío:</label>
               <input type="text" [(ngModel)]="pressOnData.city" placeholder="Ej. Bogotá, Medellín, Cali" class="form-control body-5" />
             </div>
             <div>
-              <label class="caption-2 text-subtle">Estilo o temática (opcional):</label>
-              <input type="text" [(ngModel)]="pressOnData.theme" placeholder="Ej. BTS Y2K, Cromo, Nude chic" class="form-control body-5" />
+              <label class="caption-2 text-subtle">Tu nombre (opcional):</label>
+              <input type="text" [(ngModel)]="pressOnData.clientName" placeholder="Ej. Sofía" class="form-control body-5" />
             </div>
+          </div>
+
+          <div class="step-group">
+            <label class="caption-2 text-subtle">Estilo o temática deseada (opcional):</label>
+            <input type="text" [(ngModel)]="pressOnData.theme" placeholder="Ej. BTS Y2K, Cromo azul hielo, Nude chic con cristales" class="form-control body-5" />
           </div>
 
         </div>
@@ -399,7 +168,7 @@
             
             <!-- Press-On Banner Photo Preview with Canva Edit -->
             <div class="press-on-banner-frame" *ngIf="pressOnSettings.bannerImage">
-              <img [src]="pressOnSettings.bannerImage" alt="Press On Set" class="press-on-banner-img">
+              <img [src]="pressOnSettings.bannerImage" alt="Press On Set" loading="lazy" decoding="async" class="press-on-banner-img">
               <label *ngIf="catalogService.isEditMode()" class="canva-photo-edit-badge" title="Cambiar foto de Press-On">
                 <input type="file" accept="image/*" (change)="onPressOnBannerChange($event)" class="hidden-file-input">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -416,7 +185,7 @@
             <div class="summary-specs">
               <div class="spec-row">
                 <span class="body-5 text-muted">Forma:</span>
-                <span class="body-5 text-main font-semibold">{{ pressOnData.shape | titlecase }}</span>
+                <span class="body-5 text-main font-semibold">{{ selectedShapeLabel }}</span>
               </div>
               <div class="spec-row">
                 <span class="body-5 text-muted">Largo:</span>
@@ -435,12 +204,15 @@
             <div class="summary-price-box">
               <span class="caption-2 text-subtle">Inversión base</span>
               <div 
-                class="heading-2 total-price-display"
-                [attr.contenteditable]="catalogService.isEditMode()"
+                *ngIf="catalogService.isEditMode()"
+                class="heading-2 total-price-display canva-editable"
+                contenteditable="true"
                 (blur)="updatePressOnBasePrice($event)"
-                [class.canva-editable]="catalogService.isEditMode()"
-                [title]="catalogService.isEditMode() ? 'Clic para editar inversión base' : ''">
+                title="Clic para editar inversión base">
                 Desde {{ formatPrice(pressOnSettings.basePrice) }}
+              </div>
+              <div *ngIf="!catalogService.isEditMode()" class="heading-2 total-price-display">
+                Desde <app-odometer [value]="pressOnSettings.basePrice" prefix="$" suffix=" COP"></app-odometer>
               </div>
               <p class="caption-2 text-subtle abono-note">
                 * Incluye kit completo de aplicación express (adhesivos, lima y palito de naranjo).
@@ -449,15 +221,17 @@
 
             <button 
               type="button" 
+              appMagnetic
+              [magneticStrength]="0.22"
               (click)="sendPressOnOrder()" 
               class="btn-primary w-full whatsapp-submit-btn">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/>
               </svg>
-              <span>Pedir mi Set por WhatsApp</span>
+              <span>Pedir mi Set Press-On por WhatsApp</span>
             </button>
             <p class="caption-2 text-center text-subtle mt-2">
-              Enviarás la forma, talla y largo a Yeye para definir los detalles de tu set.
+              Enviarás forma, talla, largo y temática directo a Yeye para definir tu set.
             </p>
           </div>
         </div>

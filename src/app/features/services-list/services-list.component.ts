@@ -1,15 +1,18 @@
-import { Component, Output, EventEmitter, inject, signal } from '@angular/core';
+import { Component, Output, EventEmitter, HostListener, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CatalogService } from '../../core/services/catalog.service';
 import { QuoteService } from '../../core/services/quote.service';
 import { NailService } from '../../core/models/service.model';
 import { NotificationService } from '../../core/services/notification.service';
+import { FlyToCartService } from '../../core/services/fly-to-cart.service';
+import { SplitTextComponent } from '../../shared/components/split-text/split-text.component';
+import { MagneticDirective } from '../../shared/directives/magnetic.directive';
 
 @Component({
   selector: 'app-services-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SplitTextComponent, MagneticDirective],
   templateUrl: './services-list.component.html',
   styleUrls: ['./services-list.component.scss']
 })
@@ -17,6 +20,7 @@ export class ServicesListComponent {
   catalogService = inject(CatalogService);
   private quoteService = inject(QuoteService);
   private notificationService = inject(NotificationService);
+  private flyToCart = inject(FlyToCartService);
 
   @Output() selectServiceForQuote = new EventEmitter<string>();
 
@@ -35,6 +39,13 @@ export class ServicesListComponent {
   editingPriceId = signal<string | null>(null);
   tempPriceInput: number = 0;
 
+  @HostListener('document:keydown.escape')
+  onEscapeKey() {
+    if (this.activeLightboxItem()) {
+      this.closeLightbox();
+    }
+  }
+
   get filteredServices(): NailService[] {
     return this.catalogService.filteredServices();
   }
@@ -47,23 +58,37 @@ export class ServicesListComponent {
     return this.catalogService.formatPrice(price);
   }
 
-  onSelectService(serviceId: string) {
-    this.selectServiceForQuote.emit(serviceId);
-    this.quoteService.setBookingMode('domicilio');
-    
-    const cotizador = document.getElementById('cotizador');
-    if (cotizador) {
-      cotizador.scrollIntoView({ behavior: 'smooth' });
-    }
+  onSelectService(service: NailService, event?: MouseEvent) {
+    const clickedEl = event?.currentTarget as HTMLElement | undefined;
+    const cardMedia = clickedEl?.closest('.service-card')?.querySelector('.card-media-frame') as HTMLElement | null;
+
+    this.flyToCart.flyToQuoteCart(
+      cardMedia || clickedEl || null,
+      {
+        id: service.id,
+        name: service.name,
+        imageUrl: service.imageUrl || 'images/portfolio/work_1.jpg',
+        price: service.basePrice,
+        duration: service.durationEstimate
+      },
+      () => {
+        this.selectServiceForQuote.emit(service.id);
+        this.notificationService.success(
+          `"${service.name}" añadido a tu cita (${this.flyToCart.totalCount()} en carrito). Puedes seguir sumando o abrir "Mi Cita".`
+        );
+      }
+    );
   }
 
   // --- LIGHTBOX ---
   openLightbox(service: NailService) {
     this.activeLightboxItem.set(service);
+    document.body.style.overflow = 'hidden';
   }
 
   closeLightbox() {
     this.activeLightboxItem.set(null);
+    document.body.style.overflow = '';
   }
 
   // --- CANVA LIVE EDITING METHODS ---

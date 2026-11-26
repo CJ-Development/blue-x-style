@@ -12,10 +12,12 @@
       </div>
     </a>
 
-    <!-- Desktop Nav Links (3 opciones principales unificadas) -->
+    <!-- Desktop Nav Links (acceso directo a catálogo, press-on y FAQ) -->
     <nav class="desktop-nav">
       <a [routerLink]="['/']" fragment="catalogo" (click)="scrollToSection('catalogo')" [class.active]="activeSection() === 'catalogo'" class="nav-item">Catálogo & Lookbook</a>
       <a [routerLink]="['/']" fragment="press-on" (click)="scrollToSection('press-on')" [class.active]="activeSection() === 'press-on'" class="nav-item">Press-On Nails</a>
+      <a [routerLink]="['/']" fragment="cotizador" (click)="scrollToSection('cotizador')" [class.active]="activeSection() === 'cotizador'" class="nav-item">Cotizar Press-On</a>
+      <a routerLink="/preguntas-frecuentes" class="nav-item">Preguntas Frecuentes</a>
     </nav>
 
     <!-- Actions: Theme Toggle & Single Clear CTA on desktop -->
@@ -36,12 +38,25 @@
         </svg>
       </button>
 
-      <a [routerLink]="['/']" fragment="cotizador" (click)="scrollToSection('cotizador')" class="btn-primary nav-cta">
-        <span>Cotizar Cita</span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M5 12h14M12 5l7 7-7 7"/>
+      <button
+        id="quote-cart-target-desktop"
+        type="button"
+        appMagnetic
+        [magneticStrength]="0.25"
+        (click)="flyToCartService.openDrawer()"
+        [class.cart-bump]="flyToCartService.cartPulse()"
+        class="btn-primary nav-cta"
+        aria-label="Abrir carrito de cita">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+          <path d="M3 6h18"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
         </svg>
-      </a>
+        <span>Mi Cita</span>
+        <span *ngIf="flyToCartService.itemCount > 0" class="cart-count-badge">
+          {{ flyToCartService.itemCount }}
+        </span>
+      </button>
     </div>
   </div>
 </header>
@@ -97,17 +112,24 @@
   </button>
 
   <button 
+    id="quote-cart-target-mobile"
     type="button"
     class="dock-item dock-item-highlight"
-    [class.active]="activeSection() === 'cotizador'"
-    (click)="scrollToSection('cotizador')"
-    aria-label="Ir a Cotizador">
+    [class.active]="flyToCartService.isDrawerOpen()"
+    [class.cart-bump]="flyToCartService.cartPulse()"
+    (click)="flyToCartService.openDrawer()"
+    aria-label="Abrir carrito de cita">
     <div class="dock-icon-wrapper">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+        <path d="M3 6h18"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
       </svg>
+      <span *ngIf="flyToCartService.itemCount > 0" class="dock-cart-badge">
+        {{ flyToCartService.itemCount }}
+      </span>
     </div>
-    <span class="dock-label">Cotizar</span>
-    <span class="active-dot" *ngIf="activeSection() === 'cotizador'"></span>
+    <span class="dock-label">Mi Cita</span>
+    <span class="active-dot" *ngIf="flyToCartService.isDrawerOpen()"></span>
   </button>
 </nav>

@@ -7,7 +7,9 @@
           <span class="live-dot"></span>
           <span class="caption-2">Envíos a todo Colombia</span>
         </div>
-        <h2 class="heading-2">Press-On Nails: Uñas reutilizables a medida</h2>
+        <h2 class="heading-2">
+          <app-split-text text="Press-On Nails: Uñas reutilizables a medida" [staggerMs]="20"></app-split-text>
+        </h2>
         
         <p class="body-1 section-desc">
           Sets de uñas reutilizables hechas a mano a la medida exacta de tus dedos.
@@ -15,7 +17,10 @@
         </p>
 
         <div class="benefits-list reveal-stagger">
-          <div class="benefit-item card-flat brush-interactive">
+          <div
+            class="benefit-item card-flat brush-interactive"
+            appHoverImageReveal="images/portfolio/work_6.jpg"
+            revealLabel="Aplicación Express · 10 min">
             <span class="benefit-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"/>
@@ -28,7 +33,10 @@
             </div>
           </div>
 
-          <div class="benefit-item card-flat brush-interactive">
+          <div
+            class="benefit-item card-flat brush-interactive"
+            appHoverImageReveal="images/portfolio/work_9.jpg"
+            revealLabel="Gel de Construcción Reutilizable">
             <span class="benefit-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
@@ -43,7 +51,10 @@
             </div>
           </div>
 
-          <div class="benefit-item card-flat brush-interactive">
+          <div
+            class="benefit-item card-flat brush-interactive"
+            appHoverImageReveal="images/portfolio/work_4.jpg"
+            revealLabel="Kit Completo Profesional Incluido">
             <span class="benefit-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
@@ -63,9 +74,17 @@
         <div class="price-banner card-flat">
           <div>
             <span class="caption-2 text-subtle">Inversión base</span>
-            <div class="heading-3 price-main">Desde $40.000 COP</div>
+            <div class="heading-3 price-main">
+              Desde
+              <app-odometer
+                [value]="catalogService.pressOnSettings().basePrice"
+                prefix="$"
+                suffix=" COP"
+                [animateOnScroll]="true">
+              </app-odometer>
+            </div>
           </div>
-          <button type="button" (click)="toggleSizeGuide()" class="btn-secondary guide-btn">
+          <button type="button" appMagnetic [magneticStrength]="0.22" (click)="toggleSizeGuide()" class="btn-secondary guide-btn">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="2" y="7" width="20" height="10" rx="2" ry="2"/>
               <line x1="6" y1="7" x2="6" y2="12"/>
@@ -81,7 +100,7 @@
         <div *ngIf="showSizeGuide" class="size-guide-box card-flat">
           <div class="guide-header">
             <h4 class="title-2">¿Cómo medir tu uña con precisión?</h4>
-            <button type="button" (click)="toggleSizeGuide()" class="close-guide">✕</button>
+            <button type="button" (click)="toggleSizeGuide()" class="close-guide" aria-label="Cerrar guía">✕</button>
           </div>
           <p class="body-5 guide-text">
             Coloca cinta adhesiva sobre la parte más ancha de tu uña natural, marca los extremos con un bolígrafo y mide con una regla en milímetros.
@@ -100,7 +119,7 @@
         <div class="showcase-header">
           <div class="proof-chip mb-2">
             <span class="live-dot"></span>
-            <span class="caption-2">Sets Hechos 100% a Mano</span>
+            <span class="caption-2">Sets Hechos 100% a Mano · Pasa el cursor para ver estilos</span>
           </div>
           <h3 class="heading-3 builder-title">Personaliza tu Set Sin Complicaciones</h3>
           <p class="body-5 builder-subtitle">
@@ -109,21 +128,30 @@
         </div>
 
         <div class="features-checklist mt-3">
-          <div class="feature-row">
+          <div
+            class="feature-row"
+            appHoverImageReveal="images/portfolio/work_11.jpg"
+            revealLabel="Ajuste Anatómico Milimétrico">
             <span class="check-icon">✓</span>
             <div>
               <strong class="caption-1 text-main">Medidas exactas en milímetros</strong>
               <p class="body-5 text-muted">Ajuste anatómico perfecto que parece manicura de salón recién hecha.</p>
             </div>
           </div>
-          <div class="feature-row">
+          <div
+            class="feature-row"
+            appHoverImageReveal="images/portfolio/work_1.jpg"
+            revealLabel="Brillo Espejo & Relieve 3D">
             <span class="check-icon">✓</span>
             <div>
               <strong class="caption-1 text-main">Gel de construcción de alta densidad</strong>
               <p class="body-5 text-muted">Reutilizables más de 5 veces sin quebrarse ni perder el brillo espejo.</p>
             </div>
           </div>
-          <div class="feature-row">
+          <div
+            class="feature-row"
+            appHoverImageReveal="images/portfolio/work_2.jpg"
+            revealLabel="Cat Eye & Efectos Personalizados">
             <span class="check-icon">✓</span>
             <div>
               <strong class="caption-1 text-main">Kit de aplicación profesional incluido</strong>
@@ -133,14 +161,19 @@
         </div>
 
         <div class="action-box mt-4">
-          <button type="button" (click)="goToCotizador()" class="btn-primary w-full cta-cotizador-btn">
+          <button
+            type="button"
+            appMagnetic
+            [magneticStrength]="0.25"
+            (click)="goToCotizador($event)"
+            class="btn-primary w-full cta-cotizador-btn">
             <span>Personalizar mi Set en el Cotizador</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
           </button>
           
-          <button type="button" (click)="toggleSizeGuide()" class="btn-secondary w-full mt-2">
+          <button type="button" appMagnetic [magneticStrength]="0.2" (click)="toggleSizeGuide()" class="btn-secondary w-full mt-2">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="2" y="7" width="20" height="10" rx="2" ry="2"/>
               <line x1="6" y1="7" x2="6" y2="12"/>

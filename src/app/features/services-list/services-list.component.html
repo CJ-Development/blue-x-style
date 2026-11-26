@@ -11,7 +11,9 @@
         <span class="live-dot"></span>
         <span class="caption-2">Catálogo & Diseños Reales</span>
       </div>
-      <h2 class="heading-2">Catálogo & Lookbook de Servicios</h2>
+      <h2 class="heading-2">
+        <app-split-text text="Catálogo & Lookbook de Servicios" [staggerMs]="22"></app-split-text>
+      </h2>
       <p class="body-1 section-subtitle">
         Diseños de autor hechos a mano e insumos de máxima pureza. Explora fotos de trabajos reales y cotiza tu servicio a domicilio en minutos.
       </p>
@@ -64,6 +66,8 @@
           <img 
             [src]="s.imageUrl || 'images/portfolio/work_1.jpg'" 
             [alt]="s.name" 
+            loading="lazy"
+            decoding="async"
             class="service-thumb-img"
           />
 
@@ -201,11 +205,17 @@
             </div>
           </div>
 
-          <!-- Botón de Cotizar Cita -->
-          <button (click)="onSelectService(s.id)" class="btn-primary select-btn">
-            <span>Cotizar Cita</span>
+          <!-- Botón de Agregar a mi Cita (Magnético + Fly to Cart acumulable) -->
+          <button
+            type="button"
+            appMagnetic
+            [magneticStrength]="0.25"
+            (click)="onSelectService(s, $event)"
+            class="btn-primary select-btn">
+            <span>Agregar a mi Cita</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
             </svg>
           </button>
         </div>
@@ -218,10 +228,10 @@
 </section>
 
 <!-- LIGHTBOX MODAL PARA AMPLIAR FOTO REAL -->
-<div *ngIf="activeLightboxItem()" class="lightbox-backdrop" (click)="closeLightbox()">
+<div *ngIf="activeLightboxItem()" class="lightbox-backdrop" role="dialog" aria-modal="true" (click)="closeLightbox()">
   <div class="lightbox-modal card-flat" (click)="$event.stopPropagation()">
     
-    <button type="button" (click)="closeLightbox()" class="close-lightbox-btn">✕</button>
+    <button type="button" (click)="closeLightbox()" class="close-lightbox-btn" aria-label="Cerrar vista ampliada">✕</button>
 
     <div class="lightbox-image-wrap">
       <img [src]="activeLightboxItem()?.imageUrl" [alt]="activeLightboxItem()?.name" class="lightbox-img" />
@@ -242,9 +252,11 @@
       <div class="lightbox-actions mt-3">
         <button 
           type="button" 
-          (click)="onSelectService(activeLightboxItem()!.id); closeLightbox()" 
+          appMagnetic
+          [magneticStrength]="0.22"
+          (click)="onSelectService(activeLightboxItem()!, $event); closeLightbox()" 
           class="btn-primary w-full">
-          <span>Cotizar este diseño en el Cotizador Express</span>
+          <span>Agregar este diseño a mi Carrito de Cita</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M5 12h14M12 5l7 7-7 7"/>
           </svg>

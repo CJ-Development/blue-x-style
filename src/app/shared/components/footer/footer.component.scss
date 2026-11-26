@@ -45,9 +45,14 @@
 
 /* Footer */
 .main-footer {
-  background-color: var(--bg-deep);
+  background: rgba(10, 15, 24, 0.78);
+  backdrop-filter: blur(8px);
   border-top: 1px solid var(--border-all);
   padding-top: 50px;
+}
+
+:host-context([data-theme="light"]) .main-footer {
+  background: rgba(244, 247, 251, 0.8);
 }
 
 .footer-container {

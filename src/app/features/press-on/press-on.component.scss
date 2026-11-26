@@ -1,13 +1,18 @@
 ﻿.press-on-section {
   padding: 72px 0;
   position: relative;
-  background-color: var(--bg-surface);
+  background: rgba(18, 26, 36, 0.56);
+  backdrop-filter: blur(4px);
   border-top: 1px solid var(--border-all);
   border-bottom: 1px solid var(--border-all);
 
   @media (max-width: 768px) {
     padding: 44px 0;
   }
+}
+
+:host-context([data-theme="light"]) .press-on-section {
+  background: rgba(255, 255, 255, 0.52);
 }
 
 .press-on-grid {

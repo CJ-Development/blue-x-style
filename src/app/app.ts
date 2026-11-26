@@ -8,6 +8,9 @@ import { BrushCursorComponent } from './shared/components/brush-cursor/brush-cur
 import { ToastContainerComponent } from './shared/components/toast/toast-container.component';
 import { FloatingWhatsappComponent } from './shared/components/floating-whatsapp/floating-whatsapp.component';
 import { AdminToolbarComponent } from './shared/components/admin-toolbar/admin-toolbar.component';
+import { BotanicalBackgroundComponent } from './shared/components/botanical-background/botanical-background.component';
+import { HoverRevealPreviewComponent } from './shared/components/hover-reveal-preview/hover-reveal-preview.component';
+import { QuoteCartDrawerComponent } from './shared/components/quote-cart-drawer/quote-cart-drawer.component';
 import { filter } from 'rxjs';
 
 @Component({
@@ -21,7 +24,10 @@ import { filter } from 'rxjs';
     BrushCursorComponent,
     ToastContainerComponent,
     FloatingWhatsappComponent,
-    AdminToolbarComponent
+    AdminToolbarComponent,
+    BotanicalBackgroundComponent,
+    HoverRevealPreviewComponent,
+    QuoteCartDrawerComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'

@@ -34,7 +34,7 @@ export class BrushCursorComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       // Solo en dispositivos con puntero fino (mouse)
-      if (window.matchMedia('(pointer: fine)').matches) {
+      if (typeof window.matchMedia === 'function' && window.matchMedia('(pointer: fine)').matches) {
         this.initCursor();
       }
     }

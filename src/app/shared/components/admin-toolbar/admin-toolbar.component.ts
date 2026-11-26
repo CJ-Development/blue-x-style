@@ -92,6 +92,32 @@ export class AdminToolbarComponent {
     this.closeNewModal();
   }
 
+  exportBackup() {
+    const json = this.catalogService.exportCatalogSnapshot();
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `blue-x-style-respaldo-${new Date().toISOString().slice(0, 10)}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    this.notificationService.success('Respaldo JSON descargado con todos tus precios y fotos.');
+  }
+
+  async onImportBackup(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const text = await input.files[0].text();
+      const ok = this.catalogService.importCatalogSnapshot(text);
+      if (ok) {
+        this.notificationService.success('¡Respaldo restaurado correctamente!');
+      } else {
+        this.notificationService.warning('El archivo seleccionado no es un respaldo válido.');
+      }
+      input.value = '';
+    }
+  }
+
   resetCatalog() {
     if (confirm('¿Deseas restablecer los precios y fotos originales del catálogo?')) {
       this.catalogService.resetToDefaults();

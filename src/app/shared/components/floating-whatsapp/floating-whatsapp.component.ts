@@ -1,11 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { QuoteService } from '../../../core/services/quote.service';
+import { MagneticDirective } from '../../directives/magnetic.directive';
 
 @Component({
   selector: 'app-floating-whatsapp',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MagneticDirective],
   templateUrl: './floating-whatsapp.component.html',
   styleUrls: ['./floating-whatsapp.component.scss']
 })

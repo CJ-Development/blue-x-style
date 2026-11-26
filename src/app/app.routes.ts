@@ -1,8 +1,5 @@
 ﻿import { Routes } from '@angular/router';
 import { HomePageComponent } from './pages/home/home-page.component';
-import { BookingPageComponent } from './pages/booking/booking-page.component';
-import { FaqPageComponent } from './pages/faq/faq-page.component';
-import { PoliciesPageComponent } from './pages/policies/policies-page.component';
 
 export const routes: Routes = [
   {
@@ -12,7 +9,7 @@ export const routes: Routes = [
   },
   {
     path: 'politicas',
-    component: PoliciesPageComponent,
+    loadComponent: () => import('./pages/policies/policies-page.component').then(m => m.PoliciesPageComponent),
     title: 'Políticas de Atención a Domicilio | Blue X Style by Yeye'
   },
   {
@@ -21,7 +18,7 @@ export const routes: Routes = [
   },
   {
     path: 'preguntas-frecuentes',
-    component: FaqPageComponent,
+    loadComponent: () => import('./pages/faq/faq-page.component').then(m => m.FaqPageComponent),
     title: 'Preguntas Frecuentes | Blue X Style by Yeye'
   },
   {
@@ -30,8 +27,8 @@ export const routes: Routes = [
   },
   {
     path: 'cotizar',
-    component: BookingPageComponent,
-    title: 'Reservar Cita & Cotizador a Domicilio | Blue X Style'
+    loadComponent: () => import('./pages/booking/booking-page.component').then(m => m.BookingPageComponent),
+    title: 'Personalizar Press-On Nails & Cotizador | Blue X Style'
   },
   {
     path: 'reservar',

@@ -1,7 +1,7 @@
 ﻿.quote-section {
   padding: 72px 0;
   position: relative;
-  background-color: var(--bg-deep);
+  background-color: transparent;
 
   @media (max-width: 768px) {
     padding: 44px 0;
@@ -51,6 +51,33 @@
 .quote-subtitle {
   color: var(--text-muted);
   line-height: 1.5;
+}
+
+.domicilio-cart-hint {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-all);
+
+  .open-cart-link {
+    background: none;
+    border: none;
+    color: var(--accent-blue);
+    font-weight: 800;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+
+    &:hover {
+      color: #00d4ff;
+    }
+  }
 }
 
 /* ==========================================================================

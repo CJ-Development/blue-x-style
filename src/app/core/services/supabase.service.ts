@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { QuoteBookingForm, QuoteCalculationResult } from '../models/quote.model';
 import { PressOnOrder } from '../models/press-on.model';
 
@@ -7,21 +6,64 @@ import { PressOnOrder } from '../models/press-on.model';
   providedIn: 'root'
 })
 export class SupabaseService {
-  private supabase: SupabaseClient | null = null;
-  
-  // Puedes reemplazar estas credenciales con las de tu proyecto en https://app.supabase.com
+  private supabase: any = null;
+
+  // Reemplaza estas credenciales con las de tu proyecto real en https://app.supabase.com
   private supabaseUrl = 'https://xyzcompany.supabase.co';
-  private supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...placeholder';
+  private supabaseAnonKey = 'placeholder';
   private isConfigured = false;
 
-  constructor() {
+  private async ensureClient(): Promise<any | null> {
+    if (this.supabase) return this.supabase;
+    if (!this.supabaseUrl || this.supabaseUrl.includes('xyzcompany')) {
+      return null;
+    }
+
     try {
-      if (this.supabaseUrl && !this.supabaseUrl.includes('xyzcompany')) {
-        this.supabase = createClient(this.supabaseUrl, this.supabaseAnonKey);
-        this.isConfigured = true;
-      }
+      // Lazy import para mantener el bundle inicial súper ligero
+      const { createClient } = await import('@supabase/supabase-js');
+      this.supabase = createClient(this.supabaseUrl, this.supabaseAnonKey);
+      this.isConfigured = true;
+      return this.supabase;
     } catch (e) {
-      console.warn('Supabase no configurado aún, operando en modo local/demo.');
+      console.warn('Supabase no disponible, operando en modo local:', e);
+      return null;
+    }
+  }
+
+  get configured(): boolean {
+    return this.isConfigured || (!this.supabaseUrl.includes('xyzcompany') && !!this.supabaseAnonKey);
+  }
+
+  async saveCatalogSnapshot(snapshot: Record<string, unknown>): Promise<boolean> {
+    const client = await this.ensureClient();
+    if (!client) return false;
+
+    try {
+      const { error } = await client
+        .from('site_config')
+        .upsert({ id: 'blue-x-style-main', payload: snapshot, updated_at: new Date().toISOString() });
+      return !error;
+    } catch (err) {
+      console.error('Error sincronizando catálogo con Supabase:', err);
+      return false;
+    }
+  }
+
+  async fetchCatalogSnapshot(): Promise<Record<string, unknown> | null> {
+    const client = await this.ensureClient();
+    if (!client) return null;
+
+    try {
+      const { data, error } = await client
+        .from('site_config')
+        .select('payload')
+        .eq('id', 'blue-x-style-main')
+        .single();
+      if (error || !data?.payload) return null;
+      return data.payload as Record<string, unknown>;
+    } catch {
+      return null;
     }
   }
 
@@ -42,13 +84,14 @@ export class SupabaseService {
       created_at: new Date().toISOString()
     };
 
-    if (this.isConfigured && this.supabase) {
+    const client = await this.ensureClient();
+    if (client) {
       try {
-        const { data, error } = await this.supabase
+        const { data, error } = await client
           .from('quote_requests')
           .insert([quotePayload])
           .select();
-        
+
         if (error) throw error;
         return { success: true, id: data?.[0]?.id || Date.now().toString() };
       } catch (err) {
@@ -56,7 +99,6 @@ export class SupabaseService {
       }
     }
 
-    // Fallback: almacenar en LocalStorage para no perder solicitudes
     const existing = JSON.parse(localStorage.getItem('bxs_quotes') || '[]');
     const id = 'quote_' + Date.now();
     existing.push({ id, ...quotePayload });
@@ -72,9 +114,10 @@ export class SupabaseService {
       created_at: new Date().toISOString()
     };
 
-    if (this.isConfigured && this.supabase) {
+    const client = await this.ensureClient();
+    if (client) {
       try {
-        const { data, error } = await this.supabase
+        const { data, error } = await client
           .from('press_on_orders')
           .insert([payload])
           .select();

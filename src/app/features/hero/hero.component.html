@@ -8,8 +8,22 @@
       </div>
 
       <h1 class="hero-title heading-1">
-        <span class="hero-gradient-text">Manicura Rusa, Semipermanente & Polygel</span><br>
-        <span class="hero-subtext brush-stroke-text">A Domicilio en Bogotá</span>
+        <span class="hero-gradient-wrap">
+          <app-split-text
+            text="Manicura Rusa, Semipermanente & Polygel"
+            [immediate]="true"
+            [staggerMs]="20"
+            [gradient]="true">
+          </app-split-text>
+        </span><br>
+        <span class="hero-subtext brush-stroke-text">
+          <app-split-text
+            text="A Domicilio en Bogotá"
+            [immediate]="true"
+            [baseDelay]="420"
+            [staggerMs]="24">
+          </app-split-text>
+        </span>
       </h1>
 
       <p class="hero-description body-1">
@@ -18,54 +32,86 @@
       </p>
 
       <div class="hero-ctas">
-        <a [routerLink]="['/']" fragment="cotizador" class="btn-primary">
-          <span>Cotizar cita a domicilio</span>
+        <a appMagnetic [magneticStrength]="0.28" [routerLink]="['/']" fragment="catalogo" class="btn-primary hero-pill-btn">
+          <span>Armar mi cita a domicilio</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M5 12h14M12 5l7 7-7 7"/>
           </svg>
         </a>
 
-        <a [routerLink]="['/']" fragment="servicios" class="btn-secondary">
-          <span>Ver catálogo de tarifas</span>
+        <a appMagnetic [magneticStrength]="0.24" [routerLink]="['/']" fragment="cotizador" class="btn-secondary hero-pill-btn">
+          <span>Cotizar Press-On Nails</span>
         </a>
       </div>
 
-      <!-- Proof line directly below CTA -->
+      <!-- Proof line with live Odometer metrics -->
       <div class="hero-proof-line">
         <div class="stars">
           <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
         </div>
-        <span class="proof-text caption-1">4.9/5 en satisfacción · Más de 300 citas atendidas en Bogotá</span>
+        <span class="proof-text caption-1">
+          <strong class="odo-metric"><app-odometer [value]="4.9" [decimals]="1" suffix="/5"></app-odometer></strong>
+          en satisfacción · Más de
+          <strong class="odo-metric"><app-odometer [value]="300" suffix="+"></app-odometer></strong>
+          citas ·
+          <strong class="odo-metric"><app-odometer [value]="21" suffix="+ días"></app-odometer></strong>
+          de brillo
+        </span>
       </div>
     </div>
 
-    <!-- Right Column: Editorial Showcase Card -->
-    <div class="hero-showcase-wrapper">
-      <div class="showcase-card card-flat" [class.canva-active]="catalogService.isEditMode()">
-        <div class="showcase-top">
-          <span 
-            class="caption-2 text-accent" 
-            [attr.contenteditable]="catalogService.isEditMode()" 
-            (blur)="updateStyleField(currentStyle.id, 'badge', $event)"
-            [class.canva-editable]="catalogService.isEditMode()"
-            [title]="catalogService.isEditMode() ? 'Clic para editar badge' : ''">
-            {{ currentStyle.badge }}
-          </span>
-          <span 
-            class="caption-1 price-highlight" 
-            [attr.contenteditable]="catalogService.isEditMode()" 
-            (blur)="updateStyleField(currentStyle.id, 'price', $event)"
-            [class.canva-editable]="catalogService.isEditMode()"
-            [title]="catalogService.isEditMode() ? 'Clic para editar precio' : ''">
-            {{ currentStyle.price }}
-          </span>
-        </div>
+    <!-- Right Column: Containerless Rotating Circular Orbit Showcase -->
+    <div
+      class="hero-showcase-wrapper"
+      [class.canva-active]="catalogService.isEditMode()"
+      (mouseenter)="isOrbitPaused.set(true)"
+      (mouseleave)="isOrbitPaused.set(false)">
 
-        <!-- Featured Photo Frame -->
-        <div class="photo-frame">
-          <img 
-            [src]="currentStyle.image" 
-            [alt]="currentStyle.title" 
+      <!-- Floating Top Pills (Sin contenedor) -->
+      <div class="orbit-floating-pills">
+        <span 
+          class="trend-pill caption-2 text-accent" 
+          [attr.contenteditable]="catalogService.isEditMode()" 
+          (blur)="updateStyleField(currentStyle.id, 'badge', $event)"
+          [class.canva-editable]="catalogService.isEditMode()"
+          [title]="catalogService.isEditMode() ? 'Clic para editar badge' : ''">
+          <span class="trend-dot"></span>
+          {{ currentStyle.badge }}
+        </span>
+
+        <!-- Precio con Odómetro animado al rotar / cambiar tendencia -->
+        <span
+          *ngIf="!catalogService.isEditMode()"
+          class="price-pill caption-1 price-highlight">
+          <app-odometer
+            [value]="currentNumericPrice"
+            prefix="Desde $"
+            suffix=" COP">
+          </app-odometer>
+        </span>
+        <span 
+          *ngIf="catalogService.isEditMode()"
+          class="price-pill caption-1 price-highlight canva-editable" 
+          contenteditable="true"
+          (blur)="updateStyleField(currentStyle.id, 'price', $event)"
+          title="Clic para editar precio">
+          {{ currentStyle.price }}
+        </span>
+      </div>
+
+      <!-- Escenario Orbital Circular Libre (sin caja) -->
+      <div class="orbit-stage">
+        <!-- Anillos luminosos orbitales -->
+        <div class="orbit-ring ring-track" aria-hidden="true"></div>
+        <div class="orbit-ring ring-glow" aria-hidden="true"></div>
+
+        <!-- Imagen Central Circular (cambia según el diseño seleccionado) -->
+        <div class="photo-medallion">
+          <img
+            *ngFor="let style of featuredStyles; let i = index"
+            [src]="style.image"
+            [alt]="style.title"
+            [class.is-active]="selectedStyleIndex() === i"
             class="showcase-img"
           />
 
@@ -80,75 +126,76 @@
               (change)="onPhotoChange($event, currentStyle.id)" 
               class="hidden-file-input" 
             />
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
               <circle cx="12" cy="13" r="4"/>
             </svg>
-            <span>Cambiar Foto</span>
+            <span>Foto</span>
           </label>
 
-          <div class="photo-overlay">
-            <span 
-              class="caption-2 overlay-chip" 
-              [attr.contenteditable]="catalogService.isEditMode()" 
-              (blur)="updateStyleField(currentStyle.id, 'duration', $event)"
-              [class.canva-editable]="catalogService.isEditMode()"
-              [title]="catalogService.isEditMode() ? 'Clic para editar duración' : ''">
-              {{ currentStyle.duration }}
-            </span>
-          </div>
+          <!-- Duración flotando en la curva inferior -->
+          <span 
+            class="medallion-duration caption-2"
+            [attr.contenteditable]="catalogService.isEditMode()" 
+            (blur)="updateStyleField(currentStyle.id, 'duration', $event)"
+            [class.canva-editable]="catalogService.isEditMode()">
+            ⏱ {{ currentStyle.duration }}
+          </span>
         </div>
 
-        <!-- Info details -->
-        <div class="showcase-body">
-          <h3 
-            class="heading-4 text-display" 
-            [attr.contenteditable]="catalogService.isEditMode()" 
-            (blur)="updateStyleField(currentStyle.id, 'title', $event)"
-            [class.canva-editable]="catalogService.isEditMode()"
-            [title]="catalogService.isEditMode() ? 'Clic para editar título' : ''">
-            {{ currentStyle.title }}
-          </h3>
-          <p 
-            class="body-5 text-muted" 
-            [attr.contenteditable]="catalogService.isEditMode()" 
-            (blur)="updateStyleField(currentStyle.id, 'technique', $event)"
-            [class.canva-editable]="catalogService.isEditMode()"
-            [title]="catalogService.isEditMode() ? 'Clic para editar técnica' : ''">
-            {{ currentStyle.technique }}
-          </p>
+        <!-- Diseños Orbitando en Círculo alrededor del Centro -->
+        <div
+          *ngFor="let style of featuredStyles; let i = index"
+          class="orbit-satellite"
+          [class.active]="selectedStyleIndex() === i"
+          [style.transform]="getSatelliteTransform(i)">
+          <button
+            type="button"
+            (click)="selectStyle(i)"
+            class="satellite-btn"
+            [title]="style.title">
+            <img [src]="style.image" [alt]="style.title" class="satellite-img" />
+            <span class="satellite-label">{{ style.title.split(' ')[0] }}</span>
+          </button>
 
-          <!-- Thumbnails Selector -->
-          <div class="thumbs-grid">
-            <div 
-              *ngFor="let style of featuredStyles; let i = index" 
-              class="thumb-wrapper"
-              [class.active]="selectedStyleIndex() === i">
-              <button
-                type="button"
-                (click)="selectStyle(i)"
-                class="thumb-item brush-interactive"
-                [title]="style.title">
-                <img [src]="style.image" [alt]="style.title" class="thumb-img" />
-                <span class="thumb-name">{{ style.title.split(' ')[0] }}</span>
-              </button>
-              <label *ngIf="catalogService.isEditMode()" class="thumb-quick-cam" [title]="'Cambiar foto de ' + style.title">
-                <input type="file" accept="image/*" (change)="onPhotoChange($event, style.id)" class="hidden-file-input">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                  <circle cx="12" cy="13" r="4"/>
-                </svg>
-              </label>
-            </div>
-          </div>
-
-          <a [routerLink]="['/']" fragment="cotizador" class="btn-primary w-full">
-            <span>Cotizar este estilo</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
+          <label *ngIf="catalogService.isEditMode()" class="thumb-quick-cam" [title]="'Cambiar foto de ' + style.title">
+            <input type="file" accept="image/*" (change)="onPhotoChange($event, style.id)" class="hidden-file-input">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
             </svg>
-          </a>
+          </label>
         </div>
+      </div>
+
+      <!-- Texto flotante limpio debajo del círculo (sin contenedor) -->
+      <div class="orbit-floating-info text-center">
+        <h3 
+          class="heading-4 text-display" 
+          [attr.contenteditable]="catalogService.isEditMode()" 
+          (blur)="updateStyleField(currentStyle.id, 'title', $event)"
+          [class.canva-editable]="catalogService.isEditMode()">
+          {{ currentStyle.title }}
+        </h3>
+        <p 
+          class="body-5 text-muted showcase-technique" 
+          [attr.contenteditable]="catalogService.isEditMode()" 
+          (blur)="updateStyleField(currentStyle.id, 'technique', $event)"
+          [class.canva-editable]="catalogService.isEditMode()">
+          {{ currentStyle.technique }}
+        </p>
+
+        <button
+          type="button"
+          appMagnetic
+          [magneticStrength]="0.24"
+          (click)="quoteCurrentStyle($event)"
+          class="btn-primary hero-pill-btn orbit-cta-btn">
+          <span>{{ currentStyle.serviceId === 'press-on' ? 'Personalizar este Press-On' : 'Agregar este estilo a mi cita' }}</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
       </div>
     </div>
   </div>

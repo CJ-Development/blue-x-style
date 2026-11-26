@@ -1,0 +1,233 @@
+<!-- BARRA FLOTANTE MINI DE CARRITO (visible cuando hay servicios acumulados y el drawer está cerrado) -->
+<div
+  *ngIf="cartService.totalCount() > 0 && !cartService.isDrawerOpen()"
+  class="floating-bag-bar">
+  <button
+    type="button"
+    appMagnetic
+    [magneticStrength]="0.18"
+    (click)="cartService.openDrawer()"
+    class="floating-bag-btn">
+    <span class="bag-orb-count">{{ cartService.totalCount() }}</span>
+    <span class="bag-bar-copy">
+      <strong class="caption-1">Ver mi cita</strong>
+      <span class="caption-2 bag-bar-total">
+        <app-odometer [value]="cartService.totalEstimated()" prefix="$" suffix=" COP"></app-odometer>
+      </span>
+    </span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M5 12h14M12 5l7 7-7 7"/>
+    </svg>
+  </button>
+</div>
+
+<!-- DRAWER LATERAL DEL CARRITO DE CITAS A DOMICILIO -->
+<div
+  *ngIf="cartService.isDrawerOpen()"
+  class="cart-drawer-backdrop"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Tu carrito de citas a domicilio"
+  (click)="cartService.closeDrawer()">
+
+  <aside class="cart-drawer-panel" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="drawer-header">
+      <div>
+        <div class="drawer-chip caption-2">
+          <span class="live-dot"></span>
+          <span>Armador de Cita a Domicilio · Bogotá</span>
+        </div>
+        <h3 class="heading-3 drawer-title">Mi Carrito de Cita</h3>
+      </div>
+      <button
+        type="button"
+        (click)="cartService.closeDrawer()"
+        class="drawer-close-btn"
+        aria-label="Cerrar carrito">
+        ✕
+      </button>
+    </div>
+
+    <!-- Scrollable Body -->
+    <div class="drawer-body">
+      <!-- Estado Vacío -->
+      <div *ngIf="cartService.bagItems().length === 0" class="empty-cart-box">
+        <div class="empty-icon">✨</div>
+        <h4 class="title-2">Tu bolsa de cita está vacía</h4>
+        <p class="body-5 text-muted">
+          Toca "Agregar a mi Cita" en cualquier servicio del catálogo o del carrusel para ir acumulando tu sesión a domicilio.
+        </p>
+      </div>
+
+      <!-- Lista de Servicios Acumulados -->
+      <div *ngIf="cartService.bagItems().length > 0" class="cart-items-section">
+        <div class="section-row-head">
+          <span class="caption-2 text-accent">Servicios elegidos ({{ cartService.totalCount() }})</span>
+          <button type="button" (click)="cartService.clearBag()" class="clear-bag-btn caption-2">
+            Vaciar
+          </button>
+        </div>
+
+        <div class="cart-items-list">
+          <div *ngFor="let item of cartService.bagItems()" class="cart-item-card">
+            <img [src]="item.imageUrl" [alt]="item.name" class="cart-item-thumb" />
+            <div class="cart-item-info">
+              <strong class="body-4 item-name">{{ item.name }}</strong>
+              <span class="caption-2 text-subtle">{{ item.duration }} · {{ formatPrice(item.price) }}</span>
+              <span *ngIf="item.note" class="item-note">{{ item.note }}</span>
+              <div class="item-qty-row">
+                <div class="qty-pill">
+                  <button type="button" (click)="cartService.updateQuantity(item.id, -1)" aria-label="Restar">−</button>
+                  <span>{{ item.quantity }}</span>
+                  <button type="button" (click)="cartService.updateQuantity(item.id, 1)" aria-label="Sumar">+</button>
+                </div>
+                <strong class="caption-1 text-accent">{{ formatPrice(item.price * item.quantity) }}</strong>
+              </div>
+            </div>
+            <button
+              type="button"
+              (click)="cartService.removeItem(item.id)"
+              class="item-remove-btn"
+              title="Quitar servicio"
+              aria-label="Quitar servicio">
+              ✕
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RECOMENDACIONES INTELIGENTES SEGÚN LO QUE ESCOGIÓ -->
+      <div *ngIf="cartService.recommendations().length > 0" class="recommendations-section">
+        <div class="rec-header">
+          <span class="rec-spark">✦</span>
+          <div>
+            <strong class="caption-1 text-main">
+              {{ cartService.bagItems().length > 0 ? 'Combina perfecto con tu elección' : 'Sugerencias favoritas para empezar' }}
+            </strong>
+            <p class="rec-sub">Aprovecha la misma visita a domicilio y completa tu look:</p>
+          </div>
+        </div>
+
+        <div class="rec-list">
+          <div *ngFor="let rec of cartService.recommendations()" class="rec-card">
+            <img [src]="rec.service.imageUrl || 'images/portfolio/work_1.jpg'" [alt]="rec.service.name" class="rec-thumb" />
+            <div class="rec-copy">
+              <span class="rec-tag">{{ rec.tag }}</span>
+              <strong class="body-4 rec-name">{{ rec.service.name }}</strong>
+              <p class="rec-reason">{{ rec.reason }}</p>
+              <span class="caption-2 text-accent">{{ formatPrice(rec.service.basePrice) }}</span>
+            </div>
+            <button
+              type="button"
+              (click)="addRecommendation(rec)"
+              class="rec-add-btn caption-2"
+              [title]="'Añadir ' + rec.service.name">
+              + Añadir
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- DETALLES DE LA CITA (cuando hay al menos 1 servicio) -->
+      <div *ngIf="cartService.bagItems().length > 0" class="cart-config-section">
+        <!-- Nivel de diseño -->
+        <div class="config-block">
+          <label class="caption-2 text-accent config-label">Nivel de diseño / Nail Art:</label>
+          <div class="complexity-mini-grid">
+            <button
+              type="button"
+              *ngFor="let c of catalogService.complexityLevels()"
+              (click)="cartService.selectedComplexityId.set(c.id)"
+              [class.active]="cartService.selectedComplexityId() === c.id"
+              class="comp-mini-btn">
+              <strong class="caption-2">{{ c.title.split('/')[0] }}</strong>
+              <span class="comp-mini-price">
+                {{ c.extraPrice === 0 ? 'Sin recargo' : '+ ' + formatPrice(c.extraPrice) }}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sector en Bogotá -->
+        <div class="config-block">
+          <label class="caption-2 text-accent config-label">Sector / Barrio en Bogotá:</label>
+          <div class="nh-mini-row">
+            <button
+              type="button"
+              *ngFor="let nh of popularNeighborhoods"
+              (click)="cartService.selectedNeighborhood.set(nh)"
+              [class.active]="cartService.selectedNeighborhood() === nh"
+              class="nh-mini-chip">
+              {{ nh }}
+            </button>
+          </div>
+          <input
+            *ngIf="cartService.selectedNeighborhood() === 'Otro barrio'"
+            type="text"
+            [ngModel]="cartService.customNeighborhood()"
+            (ngModelChange)="cartService.customNeighborhood.set($event)"
+            placeholder="Escribe tu barrio o localidad..."
+            class="drawer-input mt-2"
+          />
+        </div>
+
+        <!-- Nombre y Notas -->
+        <div class="config-row-2">
+          <div>
+            <label class="caption-2 text-subtle">Tu nombre (opcional):</label>
+            <input
+              type="text"
+              [ngModel]="cartService.clientName()"
+              (ngModelChange)="cartService.clientName.set($event)"
+              placeholder="Ej. Valentina"
+              class="drawer-input"
+            />
+          </div>
+          <div>
+            <label class="caption-2 text-subtle">Idea o preferencia:</label>
+            <input
+              type="text"
+              [ngModel]="cartService.extraNotes()"
+              (ngModelChange)="cartService.extraNotes.set($event)"
+              placeholder="Ej. Tonos azul hielo"
+              class="drawer-input"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Sticky con Odómetro y Botón Magnético WhatsApp -->
+    <div *ngIf="cartService.bagItems().length > 0" class="drawer-footer">
+      <div class="totals-row">
+        <div>
+          <span class="caption-2 text-subtle">Total estimado de tu cita</span>
+          <div class="heading-3 drawer-total-odo">
+            <app-odometer [value]="cartService.totalEstimated()" prefix="$" suffix=" COP"></app-odometer>
+          </div>
+        </div>
+        <div class="deposit-pill">
+          <span class="caption-2">Abono 20%</span>
+          <strong>
+            <app-odometer [value]="cartService.depositAmount()" prefix="$" suffix=" COP"></app-odometer>
+          </strong>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        appMagnetic
+        [magneticStrength]="0.18"
+        (click)="sendToWhatsApp()"
+        class="btn-primary w-full drawer-wa-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/>
+        </svg>
+        <span>
+          {{ cartService.totalCount() > 1 ? 'Agendar combo por WhatsApp' : 'Consultar disponibilidad en WhatsApp' }}
+        </span>
+      </button>
+    </div>
+  </aside>
+</div>

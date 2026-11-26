@@ -1,0 +1,102 @@
+<section id="resenas" class="social-proof-section">
+  <div class="container">
+    <div class="section-header text-center reveal-on-scroll">
+      <div class="proof-chip">
+        <span class="live-dot"></span>
+        <span class="caption-2">Transformación Real & Reseñas Verificadas</span>
+      </div>
+      <h2 class="heading-2">
+        <app-split-text text="Precisión que se Nota y se Recomienda" [staggerMs]="20"></app-split-text>
+      </h2>
+      <p class="body-1 section-subtitle">
+        Desliza el comparador para ver la diferencia entre acabado natural limpio y arte esculpido de alta costura, y conoce lo que opinan nuestras clientas en Bogotá.
+      </p>
+    </div>
+
+    <div class="proof-layout">
+      <!-- COMPARADOR INTERACTIVO ANTES / DESPUÉS -->
+      <div class="compare-card card-flat reveal-on-scroll reveal-left">
+        <div class="compare-top">
+          <span class="caption-2 text-accent">Comparador Interactivo</span>
+          <span class="caption-2 text-subtle">Arrastra la línea ↔</span>
+        </div>
+
+        <div class="compare-stage">
+          <!-- Capa base: Acabado Esculpido & Chrome 3D (Después) -->
+          <img
+            src="images/portfolio/work_1.jpg"
+            alt="Después: Liquid Chrome y Relieve 3D"
+            loading="lazy"
+            decoding="async"
+            class="compare-img compare-after"
+          />
+          <span class="compare-label label-right caption-2">Alta Costura 3D</span>
+
+          <!-- Capa recortada: Acabado Natural / Manicura Rusa Limpia (Antes) -->
+          <div class="compare-before-clip" [style.clip-path]="'inset(0 ' + (100 - sliderPos()) + '% 0 0)'">
+            <img
+              src="images/portfolio/work_11.jpg"
+              alt="Base Natural y Manicura Rusa Nivelada"
+              loading="lazy"
+              decoding="async"
+              class="compare-img compare-before"
+            />
+            <span class="compare-label label-left caption-2">Base Natural Rusa</span>
+          </div>
+
+          <!-- Línea divisoria neón + manija circular -->
+          <div class="compare-divider" [style.left.%]="sliderPos()">
+            <div class="compare-handle" aria-hidden="true">↔</div>
+          </div>
+
+          <!-- Range input accesible superpuesto para soporte mouse + táctil + teclado -->
+          <input
+            type="range"
+            min="5"
+            max="95"
+            [value]="sliderPos()"
+            (input)="onSliderInput($event)"
+            aria-label="Deslizar comparador entre acabado natural y acabado 3D"
+            class="compare-range-input"
+          />
+        </div>
+
+        <p class="body-5 text-muted compare-caption">
+          Desde uñas limpias con nivelación anatómica invisible hasta estructuras en polygel con efecto cromo líquido. Tú eliges el nivel de impacto.
+        </p>
+      </div>
+
+      <!-- RESEÑAS VERIFICADAS DE CLIENTAS -->
+      <div class="reviews-column reveal-on-scroll reveal-right">
+        <article *ngFor="let rev of reviews" class="review-card card-flat brush-interactive">
+          <div class="review-head">
+            <div class="reviewer-id">
+              <span class="reviewer-avatar">{{ rev.avatarInitials }}</span>
+              <div>
+                <strong class="body-4 text-main">{{ rev.name }}</strong>
+                <span class="caption-2 text-subtle d-block">{{ rev.neighborhood }}</span>
+              </div>
+            </div>
+            <div class="review-stars" aria-label="5 de 5 estrellas">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+          </div>
+
+          <p class="body-5 review-quote">"{{ rev.comment }}"</p>
+
+          <div class="review-foot">
+            <span class="duration-badge caption-2">✦ {{ rev.daysLasted }}</span>
+            <button
+              type="button"
+              appMagnetic
+              [magneticStrength]="0.2"
+              (click)="tryReviewedService(rev, $event)"
+              class="try-service-btn caption-2">
+              + Probar {{ rev.serviceName.split('/')[0] }}
+            </button>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
